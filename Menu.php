@@ -1,5 +1,4 @@
 <?php
-
 require_once 'cabanas.php';
 require_once 'reservas.php';
 require_once 'clientes.php';
@@ -15,12 +14,8 @@ while (true) {
     echo "1. Gestionar Cabañas\n";
     echo "2. Gestionar Reservas\n";
     echo "3. Gestionar Clientes\n";
-    echo "4. Listar Cabañas\n";
-    echo "5. Listar Reservas\n";
-    echo "6. Listar Clientes\n";
     echo "0. Salir\n";
-    echo "Ingrese el número correspondiente a la opción deseada: ";
-    $opcion = intval(trim(fgets(STDIN)));
+    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
     switch ($opcion) {
         case 1:
@@ -33,18 +28,6 @@ while (true) {
 
         case 3:
             gestionarClientes();
-            break;
-
-        case 4:
-            listarCabanas();
-            break;
-
-        case 5:
-            listarReservas();
-            break;
-
-        case 6:
-            listarClientes();
             break;
 
         case 0:
@@ -69,8 +52,7 @@ function gestionarCabanas()
         echo "3. Actualizar Cabaña\n";
         echo "4. Eliminar Cabaña\n";
         echo "0. Volver al Menú Principal\n";
-        echo "Ingrese el número correspondiente a la opción deseada: ";
-        $opcion = intval(trim(fgets(STDIN)));
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
         switch ($opcion) {
             case 1:
@@ -209,8 +191,7 @@ function gestionarClientes()
         echo "3. Actualizar Cliente\n";
         echo "4. Eliminar Cliente\n";
         echo "0. Volver al Menú Principal\n";
-        echo "Ingrese el número correspondiente a la opción deseada: ";
-        $opcion = intval(trim(fgets(STDIN)));
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
         switch ($opcion) {
             case 1:
@@ -354,8 +335,7 @@ function gestionarReservas()
         echo "3. Modificar Reserva\n";
         echo "4. Eliminar Reserva\n";
         echo "0. Volver al Menú Principal\n";
-        echo "Ingrese el número correspondiente a la opción deseada: ";
-        $opcion = intval(trim(fgets(STDIN)));
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
         switch ($opcion) {
             case 1:
