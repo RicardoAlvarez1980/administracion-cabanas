@@ -128,7 +128,7 @@ function agregarCabana()
     $cabana = new Cabanas($numero, $capacidad, $descripcion, $costoDiario);
     $cabanas[] = $cabana;
 
-    echo "Cabaña agregada exitosamente.\n";
+    echo "La cabaña nº " . $cabana->getNumero() . " fue agregada exitosamente.\n";
 }
 
 function actualizarCabana()
