@@ -47,7 +47,7 @@ function gestionarCabanas()
     global $cabanas;
 
     while (true) {
-        echo "\nMenú de Cabañas\n";
+        echo "\nBienvenido al menú de gestión de Cabañas:\n";
         echo "1. Agregar Cabaña\n";
         echo "2. Actualizar Cabaña\n";
         echo "3. Eliminar Cabaña\n";
