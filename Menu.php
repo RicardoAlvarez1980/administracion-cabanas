@@ -10,24 +10,25 @@ $clientes = [];
 
 // Menú principal
 while (true) {
+    echo "\nBienvenido a CabinManager, su gestor de resevas!\n";
     echo "\nMenú Principal\n";
-    echo "1. Gestionar Cabañas\n";
-    echo "2. Gestionar Reservas\n";
-    echo "3. Gestionar Clientes\n";
+    echo "1. Gestionar Clientes\n";
+    echo "2. Gestionar Cabañas\n";
+    echo "3. Gestionar Reservas\n";
     echo "0. Salir\n";
     $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
     switch ($opcion) {
         case 1:
-            gestionarCabanas();
+            gestionarClientes();
             break;
 
         case 2:
-            gestionarReservas();
+            gestionarCabanas();
             break;
 
         case 3:
-            gestionarClientes();
+            gestionarReservas();
             break;
 
         case 0:
@@ -47,29 +48,29 @@ function gestionarCabanas()
 
     while (true) {
         echo "\nMenú de Cabañas\n";
-        echo "1. Listar Cabañas\n";
-        echo "2. Agregar Cabaña\n";
-        echo "3. Actualizar Cabaña\n";
-        echo "4. Eliminar Cabaña\n";
+        echo "1. Agregar Cabaña\n";
+        echo "2. Actualizar Cabaña\n";
+        echo "3. Eliminar Cabaña\n";
+        echo "4. Listar Cabañas\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                listarCabanas();
-                break;
-
-            case 2:
                 agregarCabana();
                 break;
 
-            case 3:
+            case 2:
                 actualizarCabana();
                 break;
 
-            case 4:
+            case 3:
                 eliminarCabana();
+                break;
+
+            case 4:
+                listarCabanas();
                 break;
 
             case 0:
@@ -186,29 +187,29 @@ function gestionarClientes()
 
     while (true) {
         echo "\nMenú de Clientes\n";
-        echo "1. Listar Clientes\n";
-        echo "2. Agregar Cliente\n";
-        echo "3. Actualizar Cliente\n";
-        echo "4. Eliminar Cliente\n";
+        echo "1. Agregar Cliente\n";
+        echo "2. Actualizar Cliente\n";
+        echo "3. Eliminar Cliente\n";
+        echo "4. Listar Clientes\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                listarClientes();
-                break;
-
-            case 2:
                 agregarCliente();
                 break;
 
-            case 3:
+            case 2:
                 actualizarCliente();
                 break;
 
-            case 4:
+            case 3:
                 eliminarCliente();
+                break;
+
+            case 4:
+                listarClientes();
                 break;
 
             case 0:
@@ -330,29 +331,29 @@ function gestionarReservas()
 
     while (true) {
         echo "\nMenú de Reservas\n";
-        echo "1. Listar Reservas\n";
-        echo "2. Agregar Reserva\n";
-        echo "3. Modificar Reserva\n";
-        echo "4. Eliminar Reserva\n";
+        echo "1. Agregar Reserva\n";
+        echo "2. Modificar Reserva\n";
+        echo "3. Eliminar Reserva\n";
+        echo "4. Listar Reservas\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                listarReservas();
-                break;
-
-            case 2:
                 agregarReserva();
                 break;
 
-            case 3:
+            case 2:
                 modificarReserva();
                 break;
 
-            case 4:
+            case 3:
                 eliminarReserva();
+                break;
+
+            case 4:
+                listarReservas();
                 break;
 
             case 0:
