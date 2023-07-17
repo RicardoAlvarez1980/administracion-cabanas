@@ -191,6 +191,7 @@ function gestionarClientes()
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
         echo "4. Listar Clientes\n";
+        echo "5. Buscar Clientes\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
@@ -211,6 +212,9 @@ function gestionarClientes()
             case 4:
                 listarClientes();
                 break;
+            case 5:
+                buscarClientesMenu();
+                break;    
 
             case 0:
                 echo "Volviendo al Menú Principal...\n";
@@ -322,6 +326,27 @@ function eliminarCliente()
     }
 
     echo "No se encontró un cliente con el ID especificado.\n";
+}
+
+function buscarClientesMenu()
+{
+    echo "\nBuscar Clientes\n";
+    $parametroBusqueda = readline("Ingrese el término de búsqueda: ");
+    $resultados = buscarClientes($parametroBusqueda);
+
+    if (empty($resultados)) {
+        echo "No se encontraron clientes que coincidan con la búsqueda.\n";
+    } else {
+        echo "Resultados de la búsqueda:\n";
+        foreach ($resultados as $cliente) {
+            echo "ID: " . $cliente->getId() . "\n";
+            echo "Nombre: " . $cliente->getNombre() . "\n";
+            echo "Dirección: " . $cliente->getDireccion() . "\n";
+            echo "Teléfono: " . $cliente->getTelefono() . "\n";
+            echo "Email: " . $cliente->getEmail() . "\n";
+            echo "---------------------------\n";
+        }
+    }
 }
 
 // Funciones para gestionar las reservas

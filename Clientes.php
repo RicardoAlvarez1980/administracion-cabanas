@@ -69,6 +69,27 @@ class Clientes
             }
         }
     }
+    public function contieneNombre($parametroBusqueda)
+    {
+        // Aquí se verifica si el nombre del cliente contiene el parámetro de búsqueda
+        // La función stripos realiza una búsqueda insensible a mayúsculas y minúsculas
+        return stripos($this->nombre, $parametroBusqueda) !== false;
+    }
+}
+
+function buscarClientes($parametroBusqueda)
+{
+global $clientes;
+
+$resultados = [];
+
+foreach ($clientes as $cliente) {
+    if ($cliente->contieneNombre($parametroBusqueda)) {
+        $resultados[] = $cliente;
+    }
+}
+
+return $resultados;
 }
 
 ?>
