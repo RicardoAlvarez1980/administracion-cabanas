@@ -8,14 +8,46 @@ $cabanas = [];
 $reservas = [];
 $clientes = [];
 
-// Menú principal
+// Menú de ingreso al sistema
+while(true){
+    echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
+    echo "1. Gestión general del Sistema\n";
+    echo "2. Búsqueda de Clientes\n";
+    echo "3. Listados de Clientes, Cabañas y Reservas\n";
+    echo "0. Salir\n";
+    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+
+    switch ($opcion){
+        case 1:
+            GestorGeneral();
+            break;
+        
+        case 2:
+            buscarClientesMenu();
+            break;
+        case 3:
+            menuListados();
+            break;
+        case 0:
+        echo "¡Hasta luego!\n";
+        exit;
+
+        default:
+            echo "Opción inválida. Intente nuevamente.\n";
+            break;    
+    }
+}
+
+
+// Menú Secundario
+function GestorGeneral(){
 while (true) {
-    echo "\nBienvenido a CabinManager, su gestor de resevas!\n";
-    echo "\nMenú Principal\n";
+
+    echo "\nGestión General del Sistema\n";
     echo "1. Gestionar Clientes\n";
     echo "2. Gestionar Cabañas\n";
     echo "3. Gestionar Reservas\n";
-    echo "0. Salir\n";
+    echo "0. Volver al menu anterior\n";
     $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
     switch ($opcion) {
@@ -32,14 +64,50 @@ while (true) {
             break;
 
         case 0:
-            echo "¡Hasta luego!\n";
-            exit;
+            echo "Volviendo al Menú Principal\n";
+            return;
 
         default:
             echo "Opción inválida. Intente nuevamente.\n";
             break;
     }
+}}
+
+//Revisar la ubicación de esta función
+function menuListados(){
+    while(true) {
+        echo "\nListados:\n";
+        echo "1. Listar Clientes\n";
+        echo "2. Listar Cabañas\n";
+        echo "3. Listar Reservas\n";
+        echo "0. Volver al Menú Principal\n";
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+
+    switch ($opcion) {
+        case 1:
+            listarClientes();
+            break;
+
+        case 2:
+            listarCabanas();
+            break;
+
+        case 3:
+            listarReservas();
+            break;
+
+        case 0:
+            echo "Volviendo al Menú Principal\n";
+            return;
+
+        default:
+            echo "Opción inválida. Intente nuevamente.\n";
+            break;
+    }}
+
 }
+
+
 
 // Funciones para gestionar las cabañas
 function gestionarCabanas()
@@ -51,7 +119,6 @@ function gestionarCabanas()
         echo "1. Agregar Cabaña\n";
         echo "2. Actualizar Cabaña\n";
         echo "3. Eliminar Cabaña\n";
-        echo "4. Listar Cabañas\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
@@ -69,9 +136,6 @@ function gestionarCabanas()
                 eliminarCabana();
                 break;
 
-            case 4:
-                listarCabanas();
-                break;
 
             case 0:
                 echo "Volviendo al Menú Principal...\n";
@@ -190,8 +254,6 @@ function gestionarClientes()
         echo "1. Agregar Cliente\n";
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
-        echo "4. Listar Clientes\n";
-        echo "5. Buscar Clientes\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
@@ -209,12 +271,6 @@ function gestionarClientes()
                 eliminarCliente();
                 break;
 
-            case 4:
-                listarClientes();
-                break;
-            case 5:
-                buscarClientesMenu();
-                break;    
 
             case 0:
                 echo "Volviendo al Menú Principal...\n";
@@ -336,6 +392,12 @@ function buscarClientesMenu()
 
     if (empty($resultados)) {
         echo "No se encontraron clientes que coincidan con la búsqueda.\n";
+        //Discutir con Mariano a nivel programación si está bien visto que se pueda agregar clientes dentro de la busqueda.
+        $opcion = readline( "Desea agregar un nuevo cliente? S (si) , N (no): ");
+        if ($opcion == "S" or $opcion == "s"){
+            agregarCliente();
+        } 
+    
     } else {
         echo "Resultados de la búsqueda:\n";
         foreach ($resultados as $cliente) {
@@ -359,7 +421,7 @@ function gestionarReservas()
         echo "1. Agregar Reserva\n";
         echo "2. Modificar Reserva\n";
         echo "3. Eliminar Reserva\n";
-        echo "4. Listar Reservas\n";
+
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
 
@@ -377,9 +439,6 @@ function gestionarReservas()
                 eliminarReserva();
                 break;
 
-            case 4:
-                listarReservas();
-                break;
 
             case 0:
                 echo "Volviendo al Menú Principal...\n";
@@ -462,7 +521,7 @@ function agregarReserva()
     // Mostrar lista de clientes
     echo "Lista de Clientes:\n";
     foreach ($clientes as $cliente) {
-        echo "ID: " . $cliente->getId() . "\n";
+        echo "DNI: " . $cliente->getId() . "\n";
         echo "Nombre: " . $cliente->getNombre() . "\n";
         echo "Dirección: " . $cliente->getDireccion() . "\n";
         echo "Teléfono: " . $cliente->getTelefono() . "\n";
@@ -471,7 +530,7 @@ function agregarReserva()
     }
 
     // Selección de cliente
-    echo "Ingrese el ID del cliente que realiza la reserva: ";
+    echo "Ingrese el DNI (Solo ingrese números) del cliente que realiza la reserva: ";
     $idCliente = intval(trim(fgets(STDIN)));
 
     // Verificar si el cliente existe
@@ -548,5 +607,3 @@ function eliminarReserva()
 
     echo "No se encontró una reserva con el número especificado.\n";
 }
-
-?>
