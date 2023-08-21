@@ -75,21 +75,66 @@ class Clientes
         // La función stripos realiza una búsqueda insensible a mayúsculas y minúsculas
         return stripos($this->nombre, $parametroBusqueda) !== false;
     }
-}
 
-function buscarClientes($parametroBusqueda)
-{
-global $clientes;
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
+    {
+        $this->id = $id;
 
-$resultados = [];
-
-foreach ($clientes as $cliente) {
-    if ($cliente->contieneNombre($parametroBusqueda)) {
-        $resultados[] = $cliente;
+        return $this;
     }
-}
 
-return $resultados;
+        /**
+         * Set the value of nombre
+         *
+         * @return  self
+         */ 
+        public function setNombre($nombre)
+        {
+                $this->nombre = $nombre;
+
+                return $this;
+        }
+
+        /**
+         * Set the value of direccion
+         *
+         * @return  self
+         */ 
+        public function setDireccion($direccion)
+        {
+                $this->direccion = $direccion;
+
+                return $this;
+        }
+
+        /**
+         * Set the value of telefono
+         *
+         * @return  self
+         */ 
+        public function setTelefono($telefono)
+        {
+                $this->telefono = $telefono;
+
+                return $this;
+        }
+
+        /**
+         * Set the value of email
+         *
+         * @return  self
+         */ 
+        public function setEmail($email)
+        {
+                $this->email = $email;
+
+                return $this;
+        }
 }
 
 ?>

@@ -2,6 +2,7 @@
 require_once 'cabanas.php';
 require_once 'reservas.php';
 require_once 'clientes.php';
+require_once 'busquedas.php';
 
 // Arreglo para almacenar las cabañas, reservas y clientes
 $cabanas = [];
