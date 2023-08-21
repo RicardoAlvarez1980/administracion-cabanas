@@ -1,4 +1,5 @@
 <?php
+require_once 'data.php';
 class Clientes
 {
     private $id;
@@ -135,6 +136,17 @@ class Clientes
 
                 return $this;
         }
+        public static function guardarClientes($clientes) {
+            file_put_contents('clientes.json', json_encode($clientes, JSON_PRETTY_PRINT));
+        }
+    
+        public static function cargarClientes() {
+            if (file_exists('clientes.json')) {
+                return json_decode(file_get_contents('clientes.json'), true);
+            }
+            return [];
+        }
+    
 }
 
 ?>

@@ -3,6 +3,24 @@ require_once 'cabanas.php';
 require_once 'reservas.php';
 require_once 'clientes.php';
 require_once 'busquedas.php';
+require_once 'data.php';
+
+
+require_once 'cabanas.php';
+require_once 'reservas.php';
+require_once 'clientes.php';
+
+// Cargar datos al inicio
+$cabanas = Cabanas::cargarCabanas();
+$reservas = Reservas::cargarReservas();
+$clientes = Clientes::cargarClientes();
+
+// ... (código del menú y operaciones)
+
+// Al finalizar, guardar los datos actualizados
+Cabanas::guardarCabanas($cabanas);
+Reservas::guardarReservas($reservas);
+Clientes::guardarClientes($clientes);
 
 // Arreglo para almacenar las cabañas, reservas y clientes
 $cabanas = [];

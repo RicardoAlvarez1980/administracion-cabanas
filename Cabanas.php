@@ -1,4 +1,6 @@
 <?php
+require_once 'data.php';
+
 class Cabanas
 {
 private $numero;
@@ -48,4 +50,17 @@ public function setCostoDiario($costoDiario)
 {
 $this->costoDiario = $costoDiario;
 }
+
+public static function guardarCabanas($cabanas) {
+    file_put_contents('cabanas.json', json_encode($cabanas, JSON_PRETTY_PRINT));
+}
+
+public static function cargarCabanas() {
+    if (file_exists('cabanas.json')) {
+        return json_decode(file_get_contents('cabanas.json'), true);
+    }
+    return [];
+}
+
+
 }

@@ -1,5 +1,6 @@
 <?php
-require_once 'Menu.php';
+require_once 'menu.php';
+require_once 'data.php';
 class Reservas
 {   
 
@@ -69,26 +70,17 @@ class Reservas
         return $diasReserva;
     }
 
-    
-    function getJSON() {
+    public static function guardarReservas($reservas) {
+        file_put_contents('reservas.json', json_encode($reservas, JSON_PRETTY_PRINT));
+    }
 
-        $jsonAuto = [];
-        foreach ($this->reservas as $reserva) {
-            $jsonReservas[] = json_encode($reserva);
+    public static function cargarReservas() {
+        if (file_exists('reservas.json')) {
+            return json_decode(file_get_contents('reservas.json'), true);
         }
-    
-        return '{"reservas" : ['.implode(',', $jsonReservas).']}';
-    }
-    
-    function setJSON($datos) {
-        $jsonDatos = json_decode($datos);
-    
-        $reservas = $jsonDatos->reservas;
-        foreach ($reservas as $reserva) {
-            $nuevoReserva = new Reservas($reserva->numero, $reserva->cliente, $reserva ->cabana, $reserva ->fechaInicio, $reserva -> fechaFin);
-            $this->agregarReserva($nuevoReserva);
-        }
-    }
+        return [];
+}
+
 }
 
 ?>
