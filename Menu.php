@@ -6,21 +6,6 @@ require_once 'busquedas.php';
 require_once 'data.php';
 
 
-require_once 'cabanas.php';
-require_once 'reservas.php';
-require_once 'clientes.php';
-
-// Cargar datos al inicio
-$cabanas = Cabanas::cargarCabanas();
-$reservas = Reservas::cargarReservas();
-$clientes = Clientes::cargarClientes();
-
-// ... (código del menú y operaciones)
-
-// Al finalizar, guardar los datos actualizados
-Reservas::guardarReservas($reservas);
-Clientes::guardarClientes($clientes);
-
 // Arreglo para almacenar las cabañas, reservas y clientes
 $cabanas = [];
 $reservas = [];
@@ -144,27 +129,25 @@ function gestionarCabanas()
             case 1:
                 echo "---------------------------\n";
                 agregarCabana();
-                Cabanas::guardarCabanas($cabanas);
+        
                 break;
-
             case 2:
                 actualizarCabana();
-                Cabanas::guardarCabanas($cabanas);
                 break;
 
             case 3:
                 eliminarCabana();
-                Cabanas::guardarCabanas($cabanas);
+
                 break;
 
 
             case 0:
-                Cabanas::guardarCabanas($cabanas);
+
                 echo "Volviendo al Menú Principal...\n";
                 return;
 
             default:
-                Cabanas::guardarCabanas($cabanas);
+
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }
@@ -630,3 +613,8 @@ function eliminarReserva()
 
     echo "No se encontró una reserva con el número especificado.\n";
 }
+
+//MODIFICAR CODIGO DE RESERVA (ID DE RESERVA)
+
+?>
+

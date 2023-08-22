@@ -7,6 +7,7 @@ private $numero;
 private $capacidad;
 private $descripcion;
 private $costoDiario;
+private $cabanas = [];
 
 public function __construct($numero, $capacidad, $descripcion, $costoDiario)
 {
@@ -51,17 +52,68 @@ public function setCostoDiario($costoDiario)
 $this->costoDiario = $costoDiario;
 }
 
-public static function guardarCabanas($cabanas) {
-    file_put_contents('cabanas.json', json_encode($cabanas, JSON_PRETTY_PRINT));
-}
+//Probamos agregarCabana() dentro de la clase para poder llamarla (Pertenece a Menu.php)
+function agregarCabana()
+{
+    global $cabanas;
 
-public static function cargarCabanas() {
-    if (file_exists('cabanas.json')) {
-        $jsonDatos = file_get_contents('cabanas.json');
-        return json_decode($jsonDatos);
+    echo "\nAgregar Cabaña\n";
+    echo "Ingrese el número de la cabaña: ";
+    $numero = intval(trim(fgets(STDIN)));
+
+    // Verificar si el número de cabaña ya existe
+    foreach ($cabanas as $cabana) {
+        if ($cabana->getNumero() === $numero) {
+            echo "Ya existe una cabaña con ese número. Intente nuevamente.\n";
+            return;
+        }
     }
-    return [];
+
+    echo "Ingrese la capacidad de la cabaña: ";
+    $capacidad = intval(trim(fgets(STDIN)));
+    echo "Ingrese la descripción de la cabaña: ";
+    $descripcion = trim(fgets(STDIN));
+    echo "Ingrese el costo diario de la cabaña: ";
+    $costoDiario = floatval(trim(fgets(STDIN)));
+
+    $cabana = new Cabanas($numero, $capacidad, $descripcion, $costoDiario);
+    $cabanas[] = $cabana;
+
+    echo "La cabaña nº " . $cabana->getNumero() . " fue agregada exitosamente.\n";
 }
 
+
+//Codigo Mariano (Modificado... NO FUNCIONÓ)
+
+function getJSON() {
+
+    $jsonCabana = [];
+    foreach ($this->cabanas as $cabana) {
+        $jsonCabana[] = json_encode($cabana);
+    }
+
+    return '{"Cabañas" : ['.implode(',', $jsonCabana).']}';
+}
+
+function setJSON($datos) {
+    $jsonDatos = json_decode($datos);
+
+    $cabanas = $jsonDatos->cabanas;
+    foreach ($cabanas as $cabanas) {
+        $nuevaCabana = new Cabanas($cabanas->numero, $cabanas->capacidad, $cabanas ->descripcion, $cabanas -> costoDiario);
+        $this->agregarCabana($nuevaCabana);
+    }
+}
+
+function grabar($nombreArchivo) {
+    $datos = $this->getJSON();
+    file_put_contents($nombreArchivo, $datos);
+}
+
+function leer($nombreArchivo) {
+    $datos = file_get_contents($nombreArchivo);
+    $this->setJSON($datos);
+
+}
 
 }
