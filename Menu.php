@@ -18,7 +18,6 @@ $clientes = Clientes::cargarClientes();
 // ... (código del menú y operaciones)
 
 // Al finalizar, guardar los datos actualizados
-Cabanas::guardarCabanas($cabanas);
 Reservas::guardarReservas($reservas);
 Clientes::guardarClientes($clientes);
 
@@ -145,22 +144,27 @@ function gestionarCabanas()
             case 1:
                 echo "---------------------------\n";
                 agregarCabana();
+                Cabanas::guardarCabanas($cabanas);
                 break;
 
             case 2:
                 actualizarCabana();
+                Cabanas::guardarCabanas($cabanas);
                 break;
 
             case 3:
                 eliminarCabana();
+                Cabanas::guardarCabanas($cabanas);
                 break;
 
 
             case 0:
+                Cabanas::guardarCabanas($cabanas);
                 echo "Volviendo al Menú Principal...\n";
                 return;
 
             default:
+                Cabanas::guardarCabanas($cabanas);
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }

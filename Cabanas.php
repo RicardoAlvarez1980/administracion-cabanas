@@ -57,7 +57,8 @@ public static function guardarCabanas($cabanas) {
 
 public static function cargarCabanas() {
     if (file_exists('cabanas.json')) {
-        return json_decode(file_get_contents('cabanas.json'), true);
+        $jsonDatos = file_get_contents('cabanas.json');
+        return json_decode($jsonDatos);
     }
     return [];
 }

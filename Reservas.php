@@ -76,10 +76,11 @@ class Reservas
 
     public static function cargarReservas() {
         if (file_exists('reservas.json')) {
-            return json_decode(file_get_contents('reservas.json'), true);
+            $jsonDatos = file_get_contents('reservas.json');
+            return json_decode($jsonDatos);
         }
         return [];
-}
+    }
 
 }
 

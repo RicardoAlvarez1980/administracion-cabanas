@@ -142,11 +142,13 @@ class Clientes
     
         public static function cargarClientes() {
             if (file_exists('clientes.json')) {
-                return json_decode(file_get_contents('clientes.json'), true);
+                $jsonDatos = file_get_contents('clientes.json');
+                return json_decode($jsonDatos);
             }
             return [];
-        }
-    
+        } 
 }
+    
+
 
 ?>
