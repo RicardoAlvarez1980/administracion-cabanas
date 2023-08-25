@@ -4,12 +4,12 @@ require_once 'data.php';
 class Reservas
 {   
 
-    private $numero;
-    private $cliente;
-    private $cabana;
-    private $fechaInicio;
-    private $fechaFin;
-    private $reservas = [];
+    public $numero;
+    public $cliente;
+    public $cabana;
+    public $fechaInicio;
+    public $fechaFin;
+    public $reservas = [];
     public function __construct($numero, $cliente, $cabana, $fechaInicio, $fechaFin)
     {
         $this->numero = $numero;
