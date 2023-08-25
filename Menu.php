@@ -33,12 +33,17 @@ while(true){
             break;
         case 0:
         echo "¡Hasta luego!\n";
-        exit;
-
+        
+            guardarClientes($clientes);
+    
+            exit;
+            return [];
+        
         default:
             echo "Opción inválida. Intente nuevamente.\n";
             break;    
     }
+
 }
 
 
@@ -613,7 +618,18 @@ function eliminarReserva()
 
     echo "No se encontró una reserva con el número especificado.\n";
 }
+ function guardarClientes($clientes) {
+    print_r($clientes);
+    file_put_contents('clientes.json', json_encode($clientes, JSON_PRETTY_PRINT));
+}
 
+ function cargarClientes() {
+    if (file_exists('clientes.json')) {
+        $jsonDatos = file_get_contents('clientes.json');
+        return json_decode($jsonDatos);
+    }
+    return [];
+} 
 //MODIFICAR CODIGO DE RESERVA (ID DE RESERVA)
 
 ?>

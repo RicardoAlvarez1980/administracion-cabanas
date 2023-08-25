@@ -2,12 +2,12 @@
 require_once 'data.php';
 class Clientes
 {
-    private $id;
-    private $nombre;
-    private $direccion;
-    private $telefono;
-    private $email;
-    private $reservas;
+    public $id;
+    public $nombre;
+    public $direccion;
+    public $telefono;
+    public $email;
+    public $reservas;
 
     public function __construct($id, $nombre, $direccion, $telefono, $email)
     {
@@ -136,17 +136,7 @@ class Clientes
 
                 return $this;
         }
-        public static function guardarClientes($clientes) {
-            file_put_contents('clientes.json', json_encode($clientes, JSON_PRETTY_PRINT));
-        }
-    
-        public static function cargarClientes() {
-            if (file_exists('clientes.json')) {
-                $jsonDatos = file_get_contents('clientes.json');
-                return json_decode($jsonDatos);
-            }
-            return [];
-        } 
+        
 }
     
 

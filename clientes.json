@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "id": 1,
+        "nombre": "adrian",
+        "direccion": "sfde",
+        "telefono": "dsf",
+        "email": "sdc",
+        "reservas": []
+    },
+    {
+        "id": 2,
+        "nombre": "ricardo",
+        "direccion": "faefe",
+        "telefono": "aecea",
+        "email": "aecdea",
+        "reservas": []
+    }
+]
