@@ -1,13 +1,13 @@
 <?php
-require_once 'data.php';
+require_once 'Conexion.php';
 
-class Cabanas
-{
-public $numero;
-public $capacidad;
-public $descripcion;
-public $costoDiario;
-public $cabanas = [];
+class Cabanas {
+private $numero;
+private $capacidad;
+private $descripcion;
+private $costoDiario;
+private $cabanas = [];
+
 
 public function __construct($numero, $capacidad, $descripcion, $costoDiario)
 {
@@ -81,39 +81,4 @@ function agregarCabana()
 
     echo "La cabaña nº " . $cabana->getNumero() . " fue agregada exitosamente.\n";
 }
-
-
-//Codigo Mariano (Modificado... NO FUNCIONÓ)
-
-function getJSON() {
-
-    $jsonCabana = [];
-    foreach ($this->cabanas as $cabana) {
-        $jsonCabana[] = json_encode($cabana);
-    }
-
-    return '{"Cabañas" : ['.implode(',', $jsonCabana).']}';
-}
-
-function setJSON($datos) {
-    $jsonDatos = json_decode($datos);
-
-    $cabanas = $jsonDatos->cabanas;
-    foreach ($cabanas as $cabanas) {
-        $nuevaCabana = new Cabanas($cabanas->numero, $cabanas->capacidad, $cabanas ->descripcion, $cabanas -> costoDiario);
-        $this->agregarCabana($nuevaCabana);
-    }
-}
-
-function grabar($nombreArchivo) {
-    $datos = $this->getJSON();
-    file_put_contents($nombreArchivo, $datos);
-}
-
-function leer($nombreArchivo) {
-    $datos = file_get_contents($nombreArchivo);
-    $this->setJSON($datos);
-
-}
-
 }

@@ -1,15 +1,13 @@
 <?php
-require_once 'menu.php';
-require_once 'data.php';
-class Reservas
-{   
-
-    public $numero;
-    public $cliente;
-    public $cabana;
-    public $fechaInicio;
-    public $fechaFin;
-    public $reservas = [];
+require_once 'Menu.php';
+require_once 'Conexion.php';
+class Reservas {
+    private $numero;
+    private $cliente;
+    private $cabana;
+    private $fechaInicio;
+    private $fechaFin;
+    private $reservas = [];
     public function __construct($numero, $cliente, $cabana, $fechaInicio, $fechaFin)
     {
         $this->numero = $numero;
@@ -69,19 +67,4 @@ class Reservas
         $diasReserva = floor($diferencia / (60 * 60 * 24));
         return $diasReserva;
     }
-
-    public static function guardarReservas($reservas) {
-        file_put_contents('reservas.json', json_encode($reservas, JSON_PRETTY_PRINT));
-    }
-
-    public static function cargarReservas() {
-        if (file_exists('reservas.json')) {
-            $jsonDatos = file_get_contents('reservas.json');
-            return json_decode($jsonDatos);
-        }
-        return [];
-    }
-
 }
-
-?>

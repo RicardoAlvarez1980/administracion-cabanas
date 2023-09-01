@@ -1,9 +1,9 @@
 <?php
-require_once 'cabanas.php';
-require_once 'reservas.php';
-require_once 'clientes.php';
-require_once 'busquedas.php';
-require_once 'data.php';
+require_once 'Cabanas.php';
+require_once 'Reservas.php';
+require_once 'Clientes.php';
+require_once 'Busquedas.php';
+require_once 'Conexion.php';
 
 
 // Arreglo para almacenar las cabañas, reservas y clientes
@@ -33,17 +33,12 @@ while(true){
             break;
         case 0:
         echo "¡Hasta luego!\n";
-        
-            guardarClientes($clientes);
-    
-            exit;
-            return [];
-        
+        exit;
+
         default:
             echo "Opción inválida. Intente nuevamente.\n";
             break;    
     }
-
 }
 
 
@@ -617,20 +612,27 @@ function eliminarReserva()
     }
 
     echo "No se encontró una reserva con el número especificado.\n";
-}
- function guardarClientes($clientes) {
-    print_r($clientes);
-    file_put_contents('clientes.json', json_encode($clientes, JSON_PRETTY_PRINT));
+
+//Instancia de Conexion con la base de datosy consulta para listar clientes!
+    try {
+        // Obtiene la instancia de la conexión
+        $conexion = Conexion::obtenerInstancia()->obtenerConexion();
+    
+        // Ahora puedes usar $conexion para realizar consultas a la base de datos
+    
+        // Ejemplo de consulta SELECT
+        $consulta = $conexion->prepare("SELECT * FROM Clientes");
+        $consulta->execute();
+        $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Resto de tu código aquí
+    
+    } catch (PDOException $e) {
+        echo "Error de conexión: " . $e->getMessage();
+    }
+    
 }
 
- function cargarClientes() {
-    if (file_exists('clientes.json')) {
-        $jsonDatos = file_get_contents('clientes.json');
-        return json_decode($jsonDatos);
-    }
-    return [];
-} 
-//MODIFICAR CODIGO DE RESERVA (ID DE RESERVA)
+
 
 ?>
-
