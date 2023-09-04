@@ -1,7 +1,6 @@
 <?php
-require_once 'data.php';
-class Clientes
-{
+require_once 'Conexion.php';
+class Clientes {
     public $id;
     public $nombre;
     public $direccion;
@@ -136,9 +135,5 @@ class Clientes
 
                 return $this;
         }
-        
 }
-    
-
-
 ?>

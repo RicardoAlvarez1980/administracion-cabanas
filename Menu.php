@@ -253,30 +253,34 @@ function eliminarCabana()
 // Funciones para gestionar los clientes
 function gestionarClientes()
 {
-    global $clientes;
+    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
 
     while (true) {
         echo "\nMenú de Clientes\n";
         echo "1. Agregar Cliente\n";
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
+        echo "4. Listar Clientes\n";
         echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                agregarCliente();
+                agregarCliente($conexion);
                 break;
 
             case 2:
-                actualizarCliente();
+                actualizarCliente($conexion);
                 break;
 
             case 3:
-                eliminarCliente();
+                eliminarCliente($conexion);
                 break;
 
+            case 4:
+                listarClientes($conexion);
+                break;
 
             case 0:
                 echo "Volviendo al Menú Principal...\n";
@@ -289,41 +293,37 @@ function gestionarClientes()
     }
 }
 
-function listarClientes()
+//Funcion de listar clientes.
+function listarClientes($conexion)
 {
-    global $clientes;
+    $query = "SELECT * FROM cliente";
+    $resultado = $conexion->query($query);
 
-    if (empty($clientes)) {
-        echo "No hay clientes registrados.\n";
-    } else {
-        echo "Listado de Clientes:\n";
-        echo "---------------------------\n";
-        foreach ($clientes as $cliente) {
-            echo "ID: " . $cliente->getId() . "\n";
-            echo "Nombre: " . $cliente->getNombre() . "\n";
-            echo "Dirección: " . $cliente->getDireccion() . "\n";
-            echo "Teléfono: " . $cliente->getTelefono() . "\n";
-            echo "Email: " . $cliente->getEmail() . "\n";
+    if ($resultado) {
+        $clientes = $resultado->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($clientes)) {
+            echo "No hay clientes registrados.\n";
+        } else {
+            echo "Listado de Clientes:\n";
             echo "---------------------------\n";
+            foreach ($clientes as $cliente) {
+                echo "ID: " . $cliente['id'] . "\n";
+                echo "Nombre: " . $cliente['nombre'] . "\n";
+                echo "Dirección: " . $cliente['direccion'] . "\n";
+                echo "Teléfono: " . $cliente['telefono'] . "\n";
+                echo "Email: " . $cliente['email'] . "\n";
+                echo "---------------------------\n";
+            }
         }
+    } else {
+        echo "Error en la consulta: " . $conexion->errorInfo()[2];
     }
 }
 
-function agregarCliente()
+function agregarCliente($conexion)
 {
-    global $clientes;
-
     echo "\nAgregar Cliente\n";
-    echo "Ingrese el ID del cliente: ";
-    $id = intval(trim(fgets(STDIN)));
-
-    foreach ($clientes as $cliente) {
-        if ($cliente->getId() === $id) {
-            echo "Ya existe un cliente con ese ID. Intente nuevamente.\n";
-            return;
-        }
-    }
-
     echo "Ingrese el nombre del cliente: ";
     $nombre = trim(fgets(STDIN));
     echo "Ingrese la dirección del cliente: ";
@@ -333,10 +333,24 @@ function agregarCliente()
     echo "Ingrese el email del cliente: ";
     $email = trim(fgets(STDIN));
 
-    $cliente = new Clientes($id, $nombre, $direccion, $telefono, $email);
-    $clientes[] = $cliente;
+    // La columna "id" se generará automáticamente a través de la secuencia
+    $query = "INSERT INTO cliente (nombre, direccion, telefono, email) VALUES (?, ?, ?, ?)";
+    $stmt = $conexion->prepare($query);
 
-    echo "Cliente agregado exitosamente.\n";
+    if ($stmt) {
+        $stmt->bindParam(1, $nombre);
+        $stmt->bindParam(2, $direccion);
+        $stmt->bindParam(3, $telefono);
+        $stmt->bindParam(4, $email);
+
+        if ($stmt->execute()) {
+            echo "Cliente agregado exitosamente.\n";
+        } else {
+            echo "Error al agregar el cliente: " . $stmt->errorInfo()[2] . "\n";
+        }
+    } else {
+        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
+    }
 }
 
 function actualizarCliente()

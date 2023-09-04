@@ -1,9 +1,9 @@
 <?php
 class Conexion {
-    private $host = 'batyr.db.elephantsql.com';
-    private $usuario = 'nglknejg';
-    private $contrasena = 'CGRGjFyVHvvVbbcGMQeIgRXR4RalYnrZ';
-    private $base_de_datos = 'nglknejg';
+    private $host = 'berry.db.elephantsql.com';
+    private $usuario = 'rhelogcx';
+    private $contrasena = 'OMEaHkFP6WpmnUOkcgZwOEUtVe_A9TaB';
+    private $base_de_datos = 'rhelogcx';
     private $conexion;
 
     private static $instancia;
@@ -15,6 +15,8 @@ class Conexion {
                 $this->usuario,
                 $this->contrasena
             );
+            // Si llegamos aquí, la conexión fue exitosa
+            echo "Conexión exitosa a la base de datos.";
         } catch (PDOException $e) {
             die("Error de conexión a la base de datos: " . $e->getMessage());
         }
@@ -30,6 +32,6 @@ class Conexion {
     public function obtenerConexion() {
         return $this->conexion;
     }
-    
 }
+
 ?>

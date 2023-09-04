@@ -2,11 +2,11 @@
 require_once 'Conexion.php';
 
 class Cabanas {
-private $numero;
-private $capacidad;
-private $descripcion;
-private $costoDiario;
-private $cabanas = [];
+public $numero;
+public $capacidad;
+public $descripcion;
+public $costoDiario;
+public $cabanas = [];
 
 
 public function __construct($numero, $capacidad, $descripcion, $costoDiario)
