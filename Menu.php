@@ -312,7 +312,7 @@ function listarClientes($conexion)
             echo "Listado de Clientes:\n";
             echo "---------------------------\n";
             foreach ($clientes as $cliente) {
-                echo "ID: " . $cliente['id'] . "\n";
+                echo "DNI: " . $cliente['dni'] . "\n";
                 echo "Nombre: " . $cliente['nombre'] . "\n";
                 echo "Dirección: " . $cliente['direccion'] . "\n";
                 echo "Teléfono: " . $cliente['telefono'] . "\n";
@@ -328,6 +328,8 @@ function listarClientes($conexion)
 function agregarCliente($conexion)
 {
     echo "\nAgregar Cliente\n";
+    echo "Ingrese el número de DNI del cliente: ";
+    $dni = trim(fgets(STDIN));
     echo "Ingrese el nombre del cliente: ";
     $nombre = trim(fgets(STDIN));
     echo "Ingrese la dirección del cliente: ";
@@ -338,14 +340,15 @@ function agregarCliente($conexion)
     $email = trim(fgets(STDIN));
 
     // La columna "id" se generará automáticamente a través de la secuencia.
-    $query = "INSERT INTO cliente (nombre, direccion, telefono, email) VALUES (?, ?, ?, ?)";
+    $query = "INSERT INTO cliente (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($query);
 
     if ($stmt) {
-        $stmt->bindParam(1, $nombre);
-        $stmt->bindParam(2, $direccion);
-        $stmt->bindParam(3, $telefono);
-        $stmt->bindParam(4, $email);
+        $stmt->bindParam(1, $dni);
+        $stmt->bindParam(2, $nombre);
+        $stmt->bindParam(3, $direccion);
+        $stmt->bindParam(4, $telefono);
+        $stmt->bindParam(5, $email);
 
         if ($stmt->execute()) {
             echo "Cliente agregado exitosamente.\n";
@@ -361,15 +364,15 @@ function agregarCliente($conexion)
 function actualizarCliente($conexion)
 {
     echo "\nActualizar Cliente\n";
-    echo "Ingrese el ID del cliente a actualizar: ";
-    $id = intval(trim(fgets(STDIN)));
+    echo "Ingrese el DNI del cliente a actualizar: ";
+    $dni = intval(trim(fgets(STDIN)));
 
     // Comprobamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM cliente WHERE id = ?";
+    $consulta = "SELECT * FROM cliente WHERE dni = ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
-        $stmt->bindParam(1, $id);
+        $stmt->bindParam(1, $dni);
         $stmt->execute();
         $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -384,7 +387,7 @@ function actualizarCliente($conexion)
             $email = trim(fgets(STDIN));
 
             // Actualizamos los datos del cliente en la base de datos
-            $actualizarConsulta = "UPDATE cliente SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE id = ?";
+            $actualizarConsulta = "UPDATE cliente SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE dni = ?";
             $stmtActualizar = $conexion->prepare($actualizarConsulta);
 
             if ($stmtActualizar) {
@@ -403,7 +406,7 @@ function actualizarCliente($conexion)
                 echo "Error en la preparación de la consulta de actualización: " . $conexion->errorInfo()[2] . "\n";
             }
         } else {
-            echo "No se encontró un cliente con el ID especificado.\n";
+            echo "No se encontró un cliente con el DNI especificado.\n";
         }
     } else {
         echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
@@ -415,24 +418,24 @@ function eliminarCliente($conexion)
 {
     echo "\nEliminar Cliente\n";
     echo "Ingrese el ID del cliente a eliminar: ";
-    $id = intval(trim(fgets(STDIN)));
+    $dni = intval(trim(fgets(STDIN)));
 
     // Verificamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM cliente WHERE id = ?";
+    $consulta = "SELECT * FROM cliente WHERE dni = ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
-        $stmt->bindParam(1, $id);
+        $stmt->bindParam(1, $dni);
         $stmt->execute();
         $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($cliente) {
             // Eliminamos el cliente de la base de datos
-            $eliminarConsulta = "DELETE FROM cliente WHERE id = ?";
+            $eliminarConsulta = "DELETE FROM cliente WHERE dni = ?";
             $stmtEliminar = $conexion->prepare($eliminarConsulta);
 
             if ($stmtEliminar) {
-                $stmtEliminar->bindParam(1, $id);
+                $stmtEliminar->bindParam(1, $dni);
 
                 if ($stmtEliminar->execute()) {
                     echo "Cliente eliminado exitosamente.\n";
@@ -481,7 +484,7 @@ function buscarClientesMenu($conexion)
     } else {
         echo "Resultados de la búsqueda:\n";
         foreach ($resultados as $cliente) {
-            echo "ID: " . $cliente['id'] . "\n";
+            echo "DNI: " . $cliente['dni'] . "\n";
             echo "Nombre: " . $cliente['nombre'] . "\n";
             echo "Dirección: " . $cliente['direccion'] . "\n";
             echo "Teléfono: " . $cliente['telefono'] . "\n";
