@@ -2,7 +2,6 @@
 require_once 'Cabanas.php';
 require_once 'Reservas.php';
 require_once 'Clientes.php';
-require_once 'Busquedas.php';
 require_once 'Conexion.php';
 
 
@@ -250,7 +249,7 @@ function eliminarCabana()
     echo "No se encontró una cabaña con el número especificado.\n";
 }
 
-// Funciones para gestionar los clientes
+// MENU DE GESTIÓN DE CLIENTES
 function gestionarClientes()
 {
     $conexion = Conexion::obtenerInstancia()->obtenerConexion();
@@ -261,6 +260,7 @@ function gestionarClientes()
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
         echo "4. Listar Clientes\n";
+        echo "5. Buscar Clientes\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
@@ -282,6 +282,10 @@ function gestionarClientes()
                 listarClientes($conexion);
                 break;
 
+            case 5:
+                buscarClientesMenu($conexion);
+                break;
+
             case 0:
                 echo "Volviendo al Menú Principal...\n";
                 return;
@@ -293,7 +297,7 @@ function gestionarClientes()
     }
 }
 
-//Funcion de listar clientes.
+//  FUNCIÓN DE LISTAR CLIENTES
 function listarClientes($conexion)
 {
     $query = "SELECT * FROM cliente";
@@ -333,7 +337,7 @@ function agregarCliente($conexion)
     echo "Ingrese el email del cliente: ";
     $email = trim(fgets(STDIN));
 
-    // La columna "id" se generará automáticamente a través de la secuencia
+    // La columna "id" se generará automáticamente a través de la secuencia.
     $query = "INSERT INTO cliente (nombre, direccion, telefono, email) VALUES (?, ?, ?, ?)";
     $stmt = $conexion->prepare($query);
 
@@ -353,16 +357,23 @@ function agregarCliente($conexion)
     }
 }
 
-function actualizarCliente()
+// FUNCIÓN ACTUALIZAR CLIENTE MEDIANTE ID
+function actualizarCliente($conexion)
 {
-    global $clientes;
-
     echo "\nActualizar Cliente\n";
     echo "Ingrese el ID del cliente a actualizar: ";
     $id = intval(trim(fgets(STDIN)));
 
-    foreach ($clientes as $cliente) {
-        if ($cliente->getId() === $id) {
+    // Comprobamos si el cliente existe en la base de datos
+    $consulta = "SELECT * FROM cliente WHERE id = ?";
+    $stmt = $conexion->prepare($consulta);
+
+    if ($stmt) {
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($cliente) {
             echo "Ingrese el nuevo nombre del cliente: ";
             $nombre = trim(fgets(STDIN));
             echo "Ingrese la nueva dirección del cliente: ";
@@ -372,64 +383,114 @@ function actualizarCliente()
             echo "Ingrese el nuevo email del cliente: ";
             $email = trim(fgets(STDIN));
 
-            $cliente->setNombre($nombre);
-            $cliente->setDireccion($direccion);
-            $cliente->setTelefono($telefono);
-            $cliente->setEmail($email);
+            // Actualizamos los datos del cliente en la base de datos
+            $actualizarConsulta = "UPDATE cliente SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE id = ?";
+            $stmtActualizar = $conexion->prepare($actualizarConsulta);
 
-            echo "Cliente actualizado exitosamente.\n";
-            return;
+            if ($stmtActualizar) {
+                $stmtActualizar->bindParam(1, $nombre);
+                $stmtActualizar->bindParam(2, $direccion);
+                $stmtActualizar->bindParam(3, $telefono);
+                $stmtActualizar->bindParam(4, $email);
+                $stmtActualizar->bindParam(5, $id);
+
+                if ($stmtActualizar->execute()) {
+                    echo "Cliente actualizado exitosamente.\n";
+                } else {
+                    echo "Error al actualizar el cliente: " . $stmtActualizar->errorInfo()[2] . "\n";
+                }
+            } else {
+                echo "Error en la preparación de la consulta de actualización: " . $conexion->errorInfo()[2] . "\n";
+            }
+        } else {
+            echo "No se encontró un cliente con el ID especificado.\n";
         }
+    } else {
+        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
     }
-
-    echo "No se encontró un cliente con el ID especificado.\n";
 }
 
-function eliminarCliente()
+// FUNCIÓN ELIMINAR CLIENTE MEDIANTE ID
+function eliminarCliente($conexion)
 {
-    global $clientes;
-
     echo "\nEliminar Cliente\n";
     echo "Ingrese el ID del cliente a eliminar: ";
     $id = intval(trim(fgets(STDIN)));
 
-    foreach ($clientes as $key => $cliente) {
-        if ($cliente->getId() === $id) {
-            unset($clientes[$key]);
-            echo "Cliente eliminado exitosamente.\n";
-            return;
-        }
-    }
+    // Verificamos si el cliente existe en la base de datos
+    $consulta = "SELECT * FROM cliente WHERE id = ?";
+    $stmt = $conexion->prepare($consulta);
 
-    echo "No se encontró un cliente con el ID especificado.\n";
+    if ($stmt) {
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($cliente) {
+            // Eliminamos el cliente de la base de datos
+            $eliminarConsulta = "DELETE FROM cliente WHERE id = ?";
+            $stmtEliminar = $conexion->prepare($eliminarConsulta);
+
+            if ($stmtEliminar) {
+                $stmtEliminar->bindParam(1, $id);
+
+                if ($stmtEliminar->execute()) {
+                    echo "Cliente eliminado exitosamente.\n";
+                } else {
+                    echo "Error al eliminar el cliente: " . $stmtEliminar->errorInfo()[2] . "\n";
+                }
+            } else {
+                echo "Error en la preparación de la consulta de eliminación: " . $conexion->errorInfo()[2] . "\n";
+            }
+        } else {
+            echo "No se encontró un cliente con el ID especificado.\n";
+        }
+    } else {
+        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
+    }
 }
 
-function buscarClientesMenu()
+// FUNCIONES PARA BUSCAR CLIENTES (SE REQUIEREN AMBAS)
+function buscarClientes($conexion, $parametroBusqueda)
+{
+    $parametroBusqueda = '%' . $parametroBusqueda . '%'; // Agregamos comodines % para buscar en cualquier parte del nombre
+
+    $consulta = "SELECT * FROM cliente WHERE nombre ILIKE ?";
+    $stmt = $conexion->prepare($consulta);
+
+    if ($stmt) {
+        $stmt->bindParam(1, $parametroBusqueda);
+        $stmt->execute();
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $resultados;
+    } else {
+        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
+        return [];
+    }
+}
+
+function buscarClientesMenu($conexion)
 {
     echo "\nBuscar Clientes\n";
     $parametroBusqueda = readline("Ingrese el término de búsqueda: ");
-    $resultados = buscarClientes($parametroBusqueda);
+    $resultados = buscarClientes($conexion, $parametroBusqueda);
 
     if (empty($resultados)) {
         echo "No se encontraron clientes que coincidan con la búsqueda.\n";
-        //Discutir con Mariano a nivel programación si está bien visto que se pueda agregar clientes dentro de la busqueda.
-        $opcion = readline( "Desea agregar un nuevo cliente? S (si) , N (no): ");
-        if ($opcion == "S" or $opcion == "s"){
-            agregarCliente();
-        } 
-    
     } else {
         echo "Resultados de la búsqueda:\n";
         foreach ($resultados as $cliente) {
-            echo "ID: " . $cliente->getId() . "\n";
-            echo "Nombre: " . $cliente->getNombre() . "\n";
-            echo "Dirección: " . $cliente->getDireccion() . "\n";
-            echo "Teléfono: " . $cliente->getTelefono() . "\n";
-            echo "Email: " . $cliente->getEmail() . "\n";
+            echo "ID: " . $cliente['id'] . "\n";
+            echo "Nombre: " . $cliente['nombre'] . "\n";
+            echo "Dirección: " . $cliente['direccion'] . "\n";
+            echo "Teléfono: " . $cliente['telefono'] . "\n";
+            echo "Email: " . $cliente['email'] . "\n";
             echo "---------------------------\n";
         }
     }
 }
+
 
 // Funciones para gestionar las reservas
 function gestionarReservas()
