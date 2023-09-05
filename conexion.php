@@ -1,9 +1,9 @@
 <?php
 class Conexion {
     private $host = 'berry.db.elephantsql.com';
-    private $usuario = 'rhelogcx';
-    private $contrasena = 'OMEaHkFP6WpmnUOkcgZwOEUtVe_A9TaB';
-    private $base_de_datos = 'rhelogcx';
+    private $usuario = 'wgedyemx';
+    private $contrasena = 'XcaeUmpCiB8p94xk93V8rqQ7Hnp8_rs9';
+    private $base_de_datos = 'wgedyemx';
     private $conexion;
 
     private static $instancia;

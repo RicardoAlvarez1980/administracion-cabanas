@@ -10,7 +10,12 @@ $cabanas = [];
 $reservas = [];
 $clientes = [];
 
+//CONEXION A LA BASE DE DATOS
+
+
+
 // Menú de ingreso al sistema
+
 while(true){
     echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
     echo "1. Gestión general del Sistema\n";
@@ -300,7 +305,7 @@ function gestionarClientes()
 //  FUNCIÓN DE LISTAR CLIENTES
 function listarClientes($conexion)
 {
-    $query = "SELECT * FROM cliente";
+    $query = "SELECT * FROM clientes";
     $resultado = $conexion->query($query);
 
     if ($resultado) {
@@ -340,7 +345,7 @@ function agregarCliente($conexion)
     $email = trim(fgets(STDIN));
 
     // La columna "id" se generará automáticamente a través de la secuencia.
-    $query = "INSERT INTO cliente (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO clientes (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($query);
 
     if ($stmt) {
@@ -368,7 +373,7 @@ function actualizarCliente($conexion)
     $dni = intval(trim(fgets(STDIN)));
 
     // Comprobamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM cliente WHERE dni = ?";
+    $consulta = "SELECT * FROM clientes WHERE dni = ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
@@ -387,7 +392,7 @@ function actualizarCliente($conexion)
             $email = trim(fgets(STDIN));
 
             // Actualizamos los datos del cliente en la base de datos
-            $actualizarConsulta = "UPDATE cliente SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE dni = ?";
+            $actualizarConsulta = "UPDATE clientes SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE dni = ?";
             $stmtActualizar = $conexion->prepare($actualizarConsulta);
 
             if ($stmtActualizar) {
@@ -395,7 +400,7 @@ function actualizarCliente($conexion)
                 $stmtActualizar->bindParam(2, $direccion);
                 $stmtActualizar->bindParam(3, $telefono);
                 $stmtActualizar->bindParam(4, $email);
-                $stmtActualizar->bindParam(5, $id);
+                $stmtActualizar->bindParam(5, $dni);
 
                 if ($stmtActualizar->execute()) {
                     echo "Cliente actualizado exitosamente.\n";
@@ -421,7 +426,7 @@ function eliminarCliente($conexion)
     $dni = intval(trim(fgets(STDIN)));
 
     // Verificamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM cliente WHERE dni = ?";
+    $consulta = "SELECT * FROM clientes WHERE dni = ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
@@ -431,7 +436,7 @@ function eliminarCliente($conexion)
 
         if ($cliente) {
             // Eliminamos el cliente de la base de datos
-            $eliminarConsulta = "DELETE FROM cliente WHERE dni = ?";
+            $eliminarConsulta = "DELETE FROM clientes WHERE dni = ?";
             $stmtEliminar = $conexion->prepare($eliminarConsulta);
 
             if ($stmtEliminar) {
@@ -458,7 +463,7 @@ function buscarClientes($conexion, $parametroBusqueda)
 {
     $parametroBusqueda = '%' . $parametroBusqueda . '%'; // Agregamos comodines % para buscar en cualquier parte del nombre
 
-    $consulta = "SELECT * FROM cliente WHERE nombre ILIKE ?";
+    $consulta = "SELECT * FROM clientes WHERE nombre ILIKE ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
