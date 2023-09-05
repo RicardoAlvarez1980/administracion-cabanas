@@ -25,12 +25,11 @@ while (true) {
         case 1:
             GestorGeneral();
             break;
-
         case 2:
             buscarClientesMenu($conexion);
             break;
         case 3:
-            menuListados($conexion);
+            menuListados();
             break;
         case 0:
             echo "¡Hasta luego!\n";
@@ -41,8 +40,6 @@ while (true) {
             break;
     }
 }
-
-
 // Menú Secundario
 function GestorGeneral()
 {
@@ -59,27 +56,21 @@ function GestorGeneral()
             case 1:
                 gestionarClientes();
                 break;
-
             case 2:
                 gestionarCabanas();
                 break;
-
             case 3:
-                //gestionarReservas();
+                gestionarReservas();
                 break;
-
             case 0:
                 echo "Volviendo al Menú Principal\n";
                 return;
-
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }
     }
 }
-
-//Revisar la ubicación de esta función
 function menuListados()
 {
     $conexion = Conexion::obtenerInstancia()->obtenerConexion();
@@ -96,19 +87,15 @@ function menuListados()
             case 1:
                 listarClientes($conexion);
                 break;
-
             case 2:
                 listarCabanas($conexion);
                 break;
-
             case 3:
-                //listarReservas();
+                listarReservas();
                 break;
-
             case 0:
                 echo "Volviendo al Menú Principal\n";
                 return;
-
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
@@ -117,10 +104,8 @@ function menuListados()
 }
 
 // Funciones para gestionar las cabañas
-function gestionarCabanas()
-{
+function gestionarCabanas() {
     $conexion = Conexion::obtenerInstancia()->obtenerConexion();
-
     while (true) {
         echo "\nBienvenido al menú de gestión de Cabañas:\n";
         echo "1. Agregar Cabaña\n";
@@ -128,7 +113,6 @@ function gestionarCabanas()
         echo "3. Eliminar Cabaña\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
-
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
@@ -138,7 +122,7 @@ function gestionarCabanas()
                 actualizarCabana($conexion);
                 break;
             case 3:
-                //eliminarCabana($conexion);
+                eliminarCabana($conexion);
                 break;
             case 0:
                 echo "Volviendo al Menú Principal...\n";
@@ -180,7 +164,6 @@ function agregarCabana($conexion) {
     $numero = intval(trim(fgets(STDIN)));
 
     // Verificar si el número de cabaña ya existe
-
     $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
     $stmt = $conexion->prepare($consulta);
 
@@ -210,7 +193,6 @@ function agregarCabana($conexion) {
         echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
     }
 }
-
 
 function actualizarCabana($conexion) {
     echo "\nActualizar Cabaña\n";
@@ -255,27 +237,42 @@ function actualizarCabana($conexion) {
     }
 }
 
-/* function eliminarCabana($conexion) { //MODIFICAR ESTA FUNCION
-    
+function eliminarCabana($conexion) {
     echo "\nEliminar Cabaña\n";
     echo "Ingrese el número de la cabaña a eliminar: ";
     $numero = intval(trim(fgets(STDIN)));
 
-    foreach ($cabanas as $key => $cabana) {
-        if ($cabana->getNumero() === $numero) {
-            unset($cabanas[$key]);
-            echo "Cabaña eliminada exitosamente.\n";
-            return;
+    // Verificamos si la cabaña existe en la base de datos
+    $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
+    $stmt = $conexion->prepare($consulta);
+
+    if ($stmt) {
+        $stmt->bindParam(1, $numero);
+        $stmt->execute();
+        $cabana = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($cabana) {
+            //Eliminamos la cabaña de la base de datos.
+            $eliminarConsulta = "DELETE FROM Cabanas WHERE numero = ?";
+            $stmtEliminar = $conexion->prepare($eliminarConsulta);
+            if ($stmtEliminar) {
+                $stmtEliminar->bindParam(1, $numero);
+                if ($stmtEliminar->execute()) {
+                    echo "Cabaña eliminada exitosamente.\n";
+                } else {
+                    echo "Error al eliminar la cabaña: " . $stmtEliminar->errorInfo()[2] . "\n";
+                }
+            } else {
+                echo "Error en la preparación de la consulta de eliminación: " . $conexion->errorInfo()[2] . "\n";
+            }
+        } else {
+            echo "No se encontró una cabaña con el número especificado.\n";
         }
+    } else {
+        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
     }
-
-    echo "No se encontró una cabaña con el número especificado.\n";
 }
-*/
-
 // MENU DE GESTIÓN DE CLIENTES
-function gestionarClientes()
-{
+function gestionarClientes() {
     $conexion = Conexion::obtenerInstancia()->obtenerConexion();
 
     while (true) {
@@ -337,7 +334,6 @@ function listarClientes($conexion) {
         echo "Error en la consulta: " . $conexion->errorInfo()[2];
     }
 }
-
 function agregarCliente($conexion) {
     echo "\nAgregar Cliente\n";
     echo "Ingrese el número de DNI del cliente: ";
@@ -502,10 +498,7 @@ function buscarClientesMenu($conexion) {
     }
 }
 // Funciones para gestionar las reservas
-
-//falta modificar esta funcion.
-
-/*function gestionarReservas() { 
+function gestionarReservas() {
     global $reservas, $cabanas, $clientes;
 
     while (true) {
@@ -536,10 +529,10 @@ function buscarClientesMenu($conexion) {
                 break;
         }
     }
-}*/
+}
 //Falta modificar esta funcion 
 
-/* function listarReservas() {
+function listarReservas() {
     global $reservas;
 
     if (empty($reservas)) {
@@ -558,7 +551,7 @@ function buscarClientesMenu($conexion) {
         }
     }
 }
-*/
+
 
 function agregarReserva() {
     global $reservas, $cabanas, $clientes;
@@ -628,29 +621,25 @@ function agregarReserva() {
             break;
         }
     }
-
     if (!$clienteSeleccionado) {
         echo "No se encontró un cliente con el DNI especificado.\n";
         return;
     }
-
     // Ingreso de fechas de reserva
     echo "Ingrese la fecha de inicio de la reserva (formato YYYY-MM-DD): ";
     $fechaInicio = trim(fgets(STDIN));
     echo "Ingrese la fecha de fin de la reserva (formato YYYY-MM-DD): ";
     $fechaFin = trim(fgets(STDIN));
-
     // Crear un nuevo objeto de reserva
     $reserva = new Reservas(count($reservas) + 1, $clienteSeleccionado, $cabanaSeleccionada, $fechaInicio, $fechaFin);
     $reservas[] = $reserva;
-
     // Agregar la reserva al cliente
     $clienteSeleccionado->agregarReserva($reserva);
 
     echo "Reserva agregada exitosamente.\n";
 }
-
-function modificarReserva() {
+function modificarReserva()
+{
     global $reservas;
 
     echo "\nModificar Reserva\n";
@@ -675,7 +664,8 @@ function modificarReserva() {
     echo "No se encontró una reserva con el número especificado.\n";
 }
 
-function eliminarReserva() {
+function eliminarReserva()
+{
     global $reservas;
 
     echo "\nEliminar Reserva\n";
@@ -689,6 +679,5 @@ function eliminarReserva() {
             return;
         }
     }
-
     echo "No se encontró una reserva con el número especificado.\n";
 }
