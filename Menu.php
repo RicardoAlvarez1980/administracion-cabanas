@@ -100,7 +100,7 @@ function menuListados(){
             break;
 
         case 2:
-            listarCabanas();
+            listarCabanas($conexion);
             break;
 
         case 3:
@@ -122,8 +122,7 @@ function menuListados(){
 
 // Funciones para gestionar las cabañas
 function gestionarCabanas()
-{
-    global $cabanas;
+{   $conexion = Conexion::obtenerInstancia()->obtenerConexion();
 
     while (true) {
         echo "\nBienvenido al menú de gestión de Cabañas:\n";
@@ -136,15 +135,15 @@ function gestionarCabanas()
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                agregarCabana();
+                agregarCabana($conexion);
         
                 break;
             case 2:
-                actualizarCabana();
+                actualizarCabana($conexion);
                 break;
 
             case 3:
-                eliminarCabana();
+                eliminarCabana($conexion);
 
                 break;
 
@@ -162,9 +161,14 @@ function gestionarCabanas()
     }
 }
 
-function listarCabanas()
+//  ACA VA LISTAR CABAÑA
+function listarCabanas($conexion)
 {
-    global $cabanas;
+    $query = "SELECT * FROM cabanas";
+    $resultado = $conexion->query($query);
+
+    if ($resultado) {
+        $cabanas = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($cabanas)) {
         echo "No hay cabañas registradas.\n";
@@ -172,13 +176,17 @@ function listarCabanas()
         echo "Listado de Cabañas:\n";
         echo "---------------------------\n";
         foreach ($cabanas as $cabana) {
-            echo "Número: " . $cabana->getNumero() . "\n";
-            echo "Capacidad: " . $cabana->getCapacidad() . "\n";
-            echo "Descripción: " . $cabana->getDescripcion() . "\n";
-            echo "Costo Diario: " . $cabana->getCostoDiario() . "\n";
+            echo "Número: " . $cabana['numero'] . "\n";
+            echo "Capacidad: " . $cabana['capacidad'] . "\n";
+            echo "Descripción: " . $cabana['descripcion'] ."\n";
+            echo "Costo Diario: $" . $cabana['costodiario'] . "\n";
             echo "---------------------------\n";
-        }
+        
     }
+} 
+} else {
+    echo "Error en la consulta: " . $conexion-> errorInfo()[2];
+}
 }
 
 function agregarCabana()
@@ -268,8 +276,7 @@ function gestionarClientes()
         echo "1. Agregar Cliente\n";
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
-        echo "4. Listar Clientes\n";
-        echo "5. Buscar Clientes\n";
+        echo "4. Buscar Clientes\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
@@ -288,10 +295,6 @@ function gestionarClientes()
                 break;
 
             case 4:
-                listarClientes($conexion);
-                break;
-
-            case 5:
                 buscarClientesMenu($conexion);
                 break;
 
@@ -701,7 +704,3 @@ function eliminarReserva()
     echo "No se encontró una reserva con el número especificado.\n";
     
 }
-
-
-
-?>
