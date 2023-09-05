@@ -1,16 +1,16 @@
 <?php
 require_once 'Conexion.php';
 class Clientes {
-    public $id;
+    public $dni;
     public $nombre;
     public $direccion;
     public $telefono;
     public $email;
     public $reservas;
 
-    public function __construct($id, $nombre, $direccion, $telefono, $email)
+    public function __construct($dni, $nombre, $direccion, $telefono, $email)
     {
-        $this->id = $id;
+        $this->dni = $dni;
         $this->nombre = $nombre;
         $this->direccion = $direccion;
         $this->telefono = $telefono;
@@ -18,9 +18,9 @@ class Clientes {
         $this->reservas = [];
     }
 
-    public function getId()
+    public function getDni()
     {
-        return $this->id;
+        return $this->dni;
     }
 
     public function getNombre()
@@ -77,13 +77,13 @@ class Clientes {
     }
 
     /**
-     * Set the value of id
+     * Set the value of dni
      *
      * @return  self
      */ 
-    public function setId($id)
+    public function setDni($dni)
     {
-        $this->id = $id;
+        $this->dni = $dni;
 
         return $this;
     }

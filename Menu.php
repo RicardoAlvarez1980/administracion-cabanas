@@ -10,8 +10,15 @@ $cabanas = [];
 $reservas = [];
 $clientes = [];
 
+//CONEXION A LA BASE DE DATOS
+
+
+
 // Menú de ingreso al sistema
+
 while(true){
+    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
+
     echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
     echo "1. Gestión general del Sistema\n";
     echo "2. Búsqueda de Clientes\n";
@@ -25,10 +32,10 @@ while(true){
             break;
         
         case 2:
-            buscarClientesMenu();
+            buscarClientesMenu($conexion);
             break;
         case 3:
-            menuListados();
+            menuListados($conexion);
             break;
         case 0:
         echo "¡Hasta luego!\n";
@@ -77,6 +84,8 @@ while (true) {
 
 //Revisar la ubicación de esta función
 function menuListados(){
+    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
+
     while(true) {
         echo "\nListados:\n";
         echo "1. Listar Clientes\n";
@@ -87,7 +96,7 @@ function menuListados(){
 
     switch ($opcion) {
         case 1:
-            listarClientes();
+            listarClientes($conexion);
             break;
 
         case 2:
@@ -300,7 +309,7 @@ function gestionarClientes()
 //  FUNCIÓN DE LISTAR CLIENTES
 function listarClientes($conexion)
 {
-    $query = "SELECT * FROM cliente";
+    $query = "SELECT * FROM clientes";
     $resultado = $conexion->query($query);
 
     if ($resultado) {
@@ -340,7 +349,7 @@ function agregarCliente($conexion)
     $email = trim(fgets(STDIN));
 
     // La columna "id" se generará automáticamente a través de la secuencia.
-    $query = "INSERT INTO cliente (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO clientes (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($query);
 
     if ($stmt) {
@@ -368,7 +377,7 @@ function actualizarCliente($conexion)
     $dni = intval(trim(fgets(STDIN)));
 
     // Comprobamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM cliente WHERE dni = ?";
+    $consulta = "SELECT * FROM clientes WHERE dni = ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
@@ -387,7 +396,7 @@ function actualizarCliente($conexion)
             $email = trim(fgets(STDIN));
 
             // Actualizamos los datos del cliente en la base de datos
-            $actualizarConsulta = "UPDATE cliente SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE dni = ?";
+            $actualizarConsulta = "UPDATE clientes SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE dni = ?";
             $stmtActualizar = $conexion->prepare($actualizarConsulta);
 
             if ($stmtActualizar) {
@@ -395,7 +404,7 @@ function actualizarCliente($conexion)
                 $stmtActualizar->bindParam(2, $direccion);
                 $stmtActualizar->bindParam(3, $telefono);
                 $stmtActualizar->bindParam(4, $email);
-                $stmtActualizar->bindParam(5, $id);
+                $stmtActualizar->bindParam(5, $dni);
 
                 if ($stmtActualizar->execute()) {
                     echo "Cliente actualizado exitosamente.\n";
@@ -417,11 +426,11 @@ function actualizarCliente($conexion)
 function eliminarCliente($conexion)
 {
     echo "\nEliminar Cliente\n";
-    echo "Ingrese el ID del cliente a eliminar: ";
+    echo "Ingrese el DNI del cliente a eliminar: ";
     $dni = intval(trim(fgets(STDIN)));
 
     // Verificamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM cliente WHERE dni = ?";
+    $consulta = "SELECT * FROM clientes WHERE dni = ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
@@ -431,7 +440,7 @@ function eliminarCliente($conexion)
 
         if ($cliente) {
             // Eliminamos el cliente de la base de datos
-            $eliminarConsulta = "DELETE FROM cliente WHERE dni = ?";
+            $eliminarConsulta = "DELETE FROM clientes WHERE dni = ?";
             $stmtEliminar = $conexion->prepare($eliminarConsulta);
 
             if ($stmtEliminar) {
@@ -446,7 +455,7 @@ function eliminarCliente($conexion)
                 echo "Error en la preparación de la consulta de eliminación: " . $conexion->errorInfo()[2] . "\n";
             }
         } else {
-            echo "No se encontró un cliente con el ID especificado.\n";
+            echo "No se encontró un cliente con el DNI especificado.\n";
         }
     } else {
         echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
@@ -458,7 +467,7 @@ function buscarClientes($conexion, $parametroBusqueda)
 {
     $parametroBusqueda = '%' . $parametroBusqueda . '%'; // Agregamos comodines % para buscar en cualquier parte del nombre
 
-    $consulta = "SELECT * FROM cliente WHERE nombre ILIKE ?";
+    $consulta = "SELECT * FROM clientes WHERE nombre ILIKE ?";
     $stmt = $conexion->prepare($consulta);
 
     if ($stmt) {
@@ -605,7 +614,7 @@ function agregarReserva()
     // Mostrar lista de clientes
     echo "Lista de Clientes:\n";
     foreach ($clientes as $cliente) {
-        echo "DNI: " . $cliente->getId() . "\n";
+        echo "DNI: " . $cliente->getDni() . "\n";
         echo "Nombre: " . $cliente->getNombre() . "\n";
         echo "Dirección: " . $cliente->getDireccion() . "\n";
         echo "Teléfono: " . $cliente->getTelefono() . "\n";
@@ -620,14 +629,14 @@ function agregarReserva()
     // Verificar si el cliente existe
     $clienteSeleccionado = null;
     foreach ($clientes as $cliente) {
-        if ($cliente->getId() === $idCliente) {
+        if ($cliente->getDni() === $idCliente) {
             $clienteSeleccionado = $cliente;
             break;
         }
     }
 
     if (!$clienteSeleccionado) {
-        echo "No se encontró un cliente con el ID especificado.\n";
+        echo "No se encontró un cliente con el DNI especificado.\n";
         return;
     }
 
@@ -690,24 +699,6 @@ function eliminarReserva()
     }
 
     echo "No se encontró una reserva con el número especificado.\n";
-
-//Instancia de Conexion con la base de datosy consulta para listar clientes!
-    try {
-        // Obtiene la instancia de la conexión
-        $conexion = Conexion::obtenerInstancia()->obtenerConexion();
-    
-        // Ahora puedes usar $conexion para realizar consultas a la base de datos
-    
-        // Ejemplo de consulta SELECT
-        $consulta = $conexion->prepare("SELECT * FROM Clientes");
-        $consulta->execute();
-        $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
-    
-        // Resto de tu código aquí
-    
-    } catch (PDOException $e) {
-        echo "Error de conexión: " . $e->getMessage();
-    }
     
 }
 
