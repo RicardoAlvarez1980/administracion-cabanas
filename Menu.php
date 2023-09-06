@@ -4,7 +4,6 @@ require_once 'Reservas.php';
 require_once 'Clientes.php';
 require_once 'Conexion.php';
 
-
 // Arreglo para almacenar las cabañas, reservas y clientes
 $cabanas = [];
 $reservas = [];
@@ -12,7 +11,7 @@ $clientes = [];
 
 // Menú de ingreso al sistema
 
-while(true){
+while (true) {
     $conexion = Conexion::obtenerInstancia()->obtenerConexion();
 
     echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
@@ -20,186 +19,153 @@ while(true){
     echo "2. Búsqueda de Clientes\n";
     echo "3. Listados de Clientes, Cabañas y Reservas\n";
     echo "0. Salir\n";
-    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
-    switch ($opcion){
+    switch ($opcion) {
         case 1:
             GestorGeneral();
             break;
-        
         case 2:
             buscarClientesMenu($conexion);
             break;
         case 3:
-            menuListados($conexion);
+            menuListados();
             break;
         case 0:
-        echo "¡Hasta luego!\n";
-        exit;
+            echo "¡Hasta luego!\n";
+            exit;
 
         default:
             echo "Opción inválida. Intente nuevamente.\n";
-            break;    
+            break;
     }
 }
-
-
 // Menú Secundario
-function GestorGeneral(){
-while (true) {
+function GestorGeneral()
+{
+    while (true) {
 
-    echo "\nGestión General del Sistema\n";
-    echo "1. Gestionar Clientes\n";
-    echo "2. Gestionar Cabañas\n";
-    echo "3. Gestionar Reservas\n";
-    echo "0. Volver al menu anterior\n";
-    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        echo "\nGestión General del Sistema\n";
+        echo "1. Gestionar Clientes\n";
+        echo "2. Gestionar Cabañas\n";
+        echo "3. Gestionar Reservas\n";
+        echo "0. Volver al menu anterior\n";
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
-    switch ($opcion) {
-        case 1:
-            gestionarClientes();
-            break;
-
-        case 2:
-            gestionarCabanas();
-            break;
-
-        case 3:
-            gestionarReservas();
-            break;
-
-        case 0:
-            echo "Volviendo al Menú Principal\n";
-            return;
-
-        default:
-            echo "Opción inválida. Intente nuevamente.\n";
-            break;
+        switch ($opcion) {
+            case 1:
+                gestionarClientes();
+                break;
+            case 2:
+                gestionarCabanas();
+                break;
+            case 3:
+                gestionarReservas();
+                break;
+            case 0:
+                echo "Volviendo al Menú Principal\n";
+                return;
+            default:
+                echo "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
     }
-}}
-
-//Revisar la ubicación de esta función
-function menuListados(){
+}
+function menuListados()
+{
     $conexion = Conexion::obtenerInstancia()->obtenerConexion();
 
-    while(true) {
+    while (true) {
         echo "\nListados:\n";
         echo "1. Listar Clientes\n";
         echo "2. Listar Cabañas\n";
         echo "3. Listar Reservas\n";
         echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
-
-    switch ($opcion) {
-        case 1:
-            listarClientes($conexion);
-            break;
-
-        case 2:
-            listarCabanas($conexion);
-            break;
-
-        case 3:
-            listarReservas();
-            break;
-
-        case 0:
-            echo "Volviendo al Menú Principal\n";
-            return;
-
-        default:
-            echo "Opción inválida. Intente nuevamente.\n";
-            break;
-    }}
-
-}
-
-
-
-// Funciones para gestionar las cabañas
-function gestionarCabanas()
-{   $conexion = Conexion::obtenerInstancia()->obtenerConexion();
-
-    while (true) {
-        echo "\nBienvenido al menú de gestión de Cabañas:\n";
-        echo "1. Agregar Cabaña\n";
-        echo "2. Actualizar Cabaña\n";
-        echo "3. Eliminar Cabaña\n";
-        echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
         switch ($opcion) {
             case 1:
-                echo "---------------------------\n";
-                agregarCabana($conexion);
-        
+                listarClientes($conexion);
                 break;
             case 2:
-                actualizarCabana($conexion);
+                listarCabanas($conexion);
                 break;
-
             case 3:
-                eliminarCabana($conexion);
-
+                listarReservas();
                 break;
-
-
             case 0:
-
-                echo "Volviendo al Menú Principal...\n";
+                echo "Volviendo al Menú Principal\n";
                 return;
-
             default:
-
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }
     }
 }
 
-//  ACA VA LISTAR CABAÑA
-function listarCabanas($conexion)
-{
-    $query = "SELECT * FROM cabanas";
+// Funciones para gestionar las cabañas
+function gestionarCabanas() {
+    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
+    while (true) {
+        echo "\nBienvenido al menú de gestión de Cabañas:\n";
+        echo "1. Agregar Cabaña\n";
+        echo "2. Actualizar Cabaña\n";
+        echo "3. Eliminar Cabaña\n";
+        echo "0. Volver al Menú Principal\n";
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
+        switch ($opcion) {
+            case 1:
+                echo "---------------------------\n";
+                agregarCabana($conexion);
+                break;
+            case 2:
+                actualizarCabana($conexion);
+                break;
+            case 3:
+                eliminarCabana($conexion);
+                break;
+            case 0:
+                echo "Volviendo al Menú Principal...\n";
+                return;
+            default:
+                echo "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
+    }
+}
+function listarCabanas($conexion) {
+    $query = "SELECT * FROM Cabanas";
     $resultado = $conexion->query($query);
 
     if ($resultado) {
         $cabanas = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
-    if (empty($cabanas)) {
-        echo "No hay cabañas registradas.\n";
-    } else {
-        echo "Listado de Cabañas:\n";
-        echo "---------------------------\n";
-        foreach ($cabanas as $cabana) {
-            echo "Número: " . $cabana['numero'] . "\n";
-            echo "Capacidad: " . $cabana['capacidad'] . "\n";
-            echo "Descripción: " . $cabana['descripcion'] ."\n";
-            echo "Costo Diario: $" . $cabana['costodiario'] . "\n";
+        if (empty($cabanas)) {
+            echo "No hay cabañas registradas.\n";
+        } else {
+            echo "Listado de Cabañas:\n";
             echo "---------------------------\n";
-        
+            foreach ($cabanas as $cabana) {
+                echo "Número: " . $cabana['numero'] . "\n";
+                echo "Capacidad: " . $cabana['capacidad'] . "\n";
+                echo "Descripción: " . $cabana['descripcion'] . "\n";
+                echo "Costo Diario: $" . $cabana['costodiario'] . "\n";
+                echo "---------------------------\n";
+            }
+        }
+    } else {
+        echo "Error en la consulta: " . $conexion->errorInfo()[2];
     }
-} 
-} else {
-    echo "Error en la consulta: " . $conexion-> errorInfo()[2];
-}
 }
 
-function agregarCabana()
-{
-    global $cabanas;
-
+function agregarCabana($conexion) {
     echo "\nAgregar Cabaña\n";
     echo "Ingrese el número de la cabaña: ";
     $numero = intval(trim(fgets(STDIN)));
 
     // Verificar si el número de cabaña ya existe
-    foreach ($cabanas as $cabana) {
-        if ($cabana->getNumero() === $numero) {
-            echo "Ya existe una cabaña con ese número. Intente nuevamente.\n";
-            return;
-        }
-    }
+    $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
+    $stmt = $conexion->prepare($consulta);
 
     echo "Ingrese la capacidad de la cabaña: ";
     $capacidad = intval(trim(fgets(STDIN)));
@@ -208,63 +174,105 @@ function agregarCabana()
     echo "Ingrese el costo diario de la cabaña: ";
     $costoDiario = floatval(trim(fgets(STDIN)));
 
-    $cabana = new Cabanas($numero, $capacidad, $descripcion, $costoDiario);
-    $cabanas[] = $cabana;
+    // Agrega la cabaña a la base de datos.
+    $query = "INSERT INTO Cabanas (numero, capacidad, descripcion, costodiario) VALUES (?, ?, ?, ?)";
+    $stmt = $conexion->prepare($query);
 
-    echo "La cabaña nº " . $cabana->getNumero() . " fue agregada exitosamente.\n";
+    if ($stmt) {
+        $stmt->bindParam(1, $numero);
+        $stmt->bindParam(2, $capacidad);
+        $stmt->bindParam(3, $descripcion);
+        $stmt->bindParam(4, $costoDiario);
+
+        if ($stmt->execute()) {
+            echo "Cabaña agregada exitosamente.\n";
+        } else {
+            echo "Error al agregar la cabaña: " . $stmt->errorInfo()[2] . "\n";
+        }
+    } else {
+        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
+    }
 }
 
-function actualizarCabana()
-{
-    global $cabanas;
-
+function actualizarCabana($conexion) {
     echo "\nActualizar Cabaña\n";
     echo "Ingrese el número de la cabaña a actualizar: ";
     $numero = intval(trim(fgets(STDIN)));
 
-    foreach ($cabanas as $cabana) {
-        if ($cabana->getNumero() === $numero) {
+    // Comprobamos si la cabaña  existe en la base de datos
+    $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
+    $stmt = $conexion->prepare($consulta);
+
+    if ($stmt) {
+        $stmt->bindParam(1, $numero);
+        $stmt->execute();
+        $cabana = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($cabana) {
             echo "Ingrese la nueva capacidad de la cabaña: ";
             $capacidad = intval(trim(fgets(STDIN)));
             echo "Ingrese la nueva descripción de la cabaña: ";
             $descripcion = trim(fgets(STDIN));
             echo "Ingrese el nuevo costo diario de la cabaña: ";
             $costoDiario = floatval(trim(fgets(STDIN)));
-
-            $cabana->setCapacidad($capacidad);
-            $cabana->setDescripcion($descripcion);
-            $cabana->setCostoDiario($costoDiario);
-
-            echo "Cabaña actualizada exitosamente.\n";
-            return;
         }
-    }
+        // Actualizamos los datos de la cabaña en la base de datos
+        $actualizarConsulta = "UPDATE Cabanas SET capacidad = ?, descripcion = ?, costodiario = ? WHERE numero = ?";
+        $stmtActualizar = $conexion->prepare($actualizarConsulta);
+        if ($stmtActualizar) {
+            $stmtActualizar->bindParam(1, $capacidad);
+            $stmtActualizar->bindParam(2, $descripcion);
+            $stmtActualizar->bindParam(3, $costoDiario);
+            $stmtActualizar->bindParam(4, $numero);
 
-    echo "No se encontró una cabaña con el número especificado.\n";
+            if ($stmtActualizar->execute()) {
+                echo "Canbaña actualizado exitosamente.\n";
+            } else {
+                echo "Error al actualizar la cabaña: " . $stmtActualizar->errorInfo()[2] . "\n";
+            }
+        } else {
+            echo "Error en la preparación de la consulta de actualización: " . $conexion->errorInfo()[2] . "\n";
+        }
+    } else {
+        echo "No se encontró una cabaña con el número especificado.\n";
+    }
 }
 
-function eliminarCabana()
-{
-    global $cabanas;
-
+function eliminarCabana($conexion) {
     echo "\nEliminar Cabaña\n";
     echo "Ingrese el número de la cabaña a eliminar: ";
     $numero = intval(trim(fgets(STDIN)));
 
-    foreach ($cabanas as $key => $cabana) {
-        if ($cabana->getNumero() === $numero) {
-            unset($cabanas[$key]);
-            echo "Cabaña eliminada exitosamente.\n";
-            return;
+    // Verificamos si la cabaña existe en la base de datos
+    $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
+    $stmt = $conexion->prepare($consulta);
+
+    if ($stmt) {
+        $stmt->bindParam(1, $numero);
+        $stmt->execute();
+        $cabana = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($cabana) {
+            //Eliminamos la cabaña de la base de datos.
+            $eliminarConsulta = "DELETE FROM Cabanas WHERE numero = ?";
+            $stmtEliminar = $conexion->prepare($eliminarConsulta);
+            if ($stmtEliminar) {
+                $stmtEliminar->bindParam(1, $numero);
+                if ($stmtEliminar->execute()) {
+                    echo "Cabaña eliminada exitosamente.\n";
+                } else {
+                    echo "Error al eliminar la cabaña: " . $stmtEliminar->errorInfo()[2] . "\n";
+                }
+            } else {
+                echo "Error en la preparación de la consulta de eliminación: " . $conexion->errorInfo()[2] . "\n";
+            }
+        } else {
+            echo "No se encontró una cabaña con el número especificado.\n";
         }
+    } else {
+        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
     }
-
-    echo "No se encontró una cabaña con el número especificado.\n";
 }
-
 // MENU DE GESTIÓN DE CLIENTES
-function gestionarClientes()
-{
+function gestionarClientes() {
     $conexion = Conexion::obtenerInstancia()->obtenerConexion();
 
     while (true) {
@@ -281,23 +289,18 @@ function gestionarClientes()
                 echo "---------------------------\n";
                 agregarCliente($conexion);
                 break;
-
             case 2:
                 actualizarCliente($conexion);
                 break;
-
             case 3:
                 eliminarCliente($conexion);
                 break;
-
             case 4:
                 buscarClientesMenu($conexion);
                 break;
-
             case 0:
                 echo "Volviendo al Menú Principal...\n";
                 return;
-
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
@@ -306,8 +309,7 @@ function gestionarClientes()
 }
 
 //  FUNCIÓN DE LISTAR CLIENTES
-function listarClientes($conexion)
-{
+function listarClientes($conexion) {
     $query = "SELECT * FROM clientes";
     $resultado = $conexion->query($query);
 
@@ -332,9 +334,7 @@ function listarClientes($conexion)
         echo "Error en la consulta: " . $conexion->errorInfo()[2];
     }
 }
-
-function agregarCliente($conexion)
-{
+function agregarCliente($conexion) {
     echo "\nAgregar Cliente\n";
     echo "Ingrese el número de DNI del cliente: ";
     $dni = trim(fgets(STDIN));
@@ -368,9 +368,8 @@ function agregarCliente($conexion)
     }
 }
 
-// FUNCIÓN ACTUALIZAR CLIENTE MEDIANTE ID
-function actualizarCliente($conexion)
-{
+// FUNCIÓN ACTUALIZAR CLIENTE MEDIANTE DNI
+function actualizarCliente($conexion) {
     echo "\nActualizar Cliente\n";
     echo "Ingrese el DNI del cliente a actualizar: ";
     $dni = intval(trim(fgets(STDIN)));
@@ -421,9 +420,8 @@ function actualizarCliente($conexion)
     }
 }
 
-// FUNCIÓN ELIMINAR CLIENTE MEDIANTE ID
-function eliminarCliente($conexion)
-{
+// FUNCIÓN ELIMINAR CLIENTE MEDIANTE DNI
+function eliminarCliente($conexion) {
     echo "\nEliminar Cliente\n";
     echo "Ingrese el DNI del cliente a eliminar: ";
     $dni = intval(trim(fgets(STDIN)));
@@ -462,8 +460,7 @@ function eliminarCliente($conexion)
 }
 
 // FUNCIONES PARA BUSCAR CLIENTES (SE REQUIEREN AMBAS)
-function buscarClientes($conexion, $parametroBusqueda)
-{
+function buscarClientes($conexion, $parametroBusqueda) {
     $parametroBusqueda = '%' . $parametroBusqueda . '%'; // Agregamos comodines % para buscar en cualquier parte del nombre
 
     $consulta = "SELECT * FROM clientes WHERE nombre ILIKE ?";
@@ -481,8 +478,7 @@ function buscarClientes($conexion, $parametroBusqueda)
     }
 }
 
-function buscarClientesMenu($conexion)
-{
+function buscarClientesMenu($conexion) {
     echo "\nBuscar Clientes\n";
     $parametroBusqueda = readline("Ingrese el término de búsqueda: ");
     $resultados = buscarClientes($conexion, $parametroBusqueda);
@@ -501,11 +497,8 @@ function buscarClientesMenu($conexion)
         }
     }
 }
-
-
 // Funciones para gestionar las reservas
-function gestionarReservas()
-{
+function gestionarReservas() {
     global $reservas, $cabanas, $clientes;
 
     while (true) {
@@ -515,36 +508,31 @@ function gestionarReservas()
         echo "3. Eliminar Reserva\n";
 
         echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
                 agregarReserva();
                 break;
-
             case 2:
                 modificarReserva();
                 break;
-
             case 3:
                 eliminarReserva();
                 break;
-
-
             case 0:
                 echo "Volviendo al Menú Principal...\n";
                 return;
-
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }
     }
 }
+//Falta modificar esta funcion 
 
-function listarReservas()
-{
+function listarReservas() {
     global $reservas;
 
     if (empty($reservas)) {
@@ -564,8 +552,8 @@ function listarReservas()
     }
 }
 
-function agregarReserva()
-{
+
+function agregarReserva() {
     global $reservas, $cabanas, $clientes;
 
     echo "\nAgregar Reserva\n";
@@ -633,28 +621,23 @@ function agregarReserva()
             break;
         }
     }
-
     if (!$clienteSeleccionado) {
         echo "No se encontró un cliente con el DNI especificado.\n";
         return;
     }
-
     // Ingreso de fechas de reserva
     echo "Ingrese la fecha de inicio de la reserva (formato YYYY-MM-DD): ";
     $fechaInicio = trim(fgets(STDIN));
     echo "Ingrese la fecha de fin de la reserva (formato YYYY-MM-DD): ";
     $fechaFin = trim(fgets(STDIN));
-
     // Crear un nuevo objeto de reserva
     $reserva = new Reservas(count($reservas) + 1, $clienteSeleccionado, $cabanaSeleccionada, $fechaInicio, $fechaFin);
     $reservas[] = $reserva;
-
     // Agregar la reserva al cliente
     $clienteSeleccionado->agregarReserva($reserva);
 
     echo "Reserva agregada exitosamente.\n";
 }
-
 function modificarReserva()
 {
     global $reservas;
@@ -696,7 +679,5 @@ function eliminarReserva()
             return;
         }
     }
-
     echo "No se encontró una reserva con el número especificado.\n";
-    
 }
