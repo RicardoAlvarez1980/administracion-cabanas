@@ -10,10 +10,6 @@ $cabanas = [];
 $reservas = [];
 $clientes = [];
 
-//CONEXION A LA BASE DE DATOS
-
-
-
 // Menú de ingreso al sistema
 
 while(true){
