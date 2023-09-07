@@ -334,6 +334,7 @@ function listarClientes($conexion) {
         echo "Error en la consulta: " . $conexion->errorInfo()[2];
     }
 }
+
 function agregarCliente($conexion) {
     echo "\nAgregar Cliente\n";
     echo "Ingrese el número de DNI del cliente: ";
@@ -347,7 +348,7 @@ function agregarCliente($conexion) {
     echo "Ingrese el email del cliente: ";
     $email = trim(fgets(STDIN));
 
-    // La columna "id" se generará automáticamente a través de la secuencia.
+    // La columna "DNI" se generará automáticamente a través de la secuencia.
     $query = "INSERT INTO clientes (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($query);
 
