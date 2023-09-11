@@ -347,7 +347,6 @@ function agregarCliente($conexion) {
     echo "Ingrese el email del cliente: ";
     $email = trim(fgets(STDIN));
 
-    // La columna "id" se generará automáticamente a través de la secuencia.
     $query = "INSERT INTO clientes (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($query);
 
