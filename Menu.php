@@ -334,6 +334,7 @@ function listarClientes($conexion) {
         echo "Error en la consulta: " . $conexion->errorInfo()[2];
     }
 }
+
 function agregarCliente($conexion) {
     echo "\nAgregar Cliente\n";
     echo "Ingrese el número de DNI del cliente: ";
