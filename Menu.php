@@ -556,7 +556,7 @@ function listarReservas($conexion) {
                 echo "Cabaña: " . $reserva['numero_cabana'] . "\n";
                 echo "Fecha de inicio: " . $reserva['fechainicio'] . "\n";
                 echo "Fecha de fin: " . $reserva['fechafin'] . "\n";
-                echo "Costo de la reserva: " . $reserva['costo_total'] . "\n";
+                echo "Costo de la reserva: $" . $reserva['costo_total'] . "\n";
                 echo "---------------------------\n";
             }
         } else {
@@ -589,7 +589,7 @@ function agregarReserva($conexion) {
             echo "Número: " . $cabaña['numero'] . "\n";
             echo "Capacidad: " . $cabaña['capacidad'] . "\n";
             echo "Descripción: " . $cabaña['descripcion'] . "\n";
-            echo "Costo Diario: " . $cabaña['costodiario'] . "\n";
+            echo "Costo Diario: $" . $cabaña['costodiario'] . "\n";
             echo "---------------------------\n";
         }
 
