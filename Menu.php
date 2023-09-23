@@ -534,7 +534,6 @@ function gestionarReservas() {
 //Falta modificar esta funcion 
 
 function listarReservas() {
-    global $reservas;
 
     if (empty($reservas)) {
         echo "No hay reservas registradas.\n";
