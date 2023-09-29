@@ -4,11 +4,6 @@ require_once 'Reservas.php';
 require_once 'Clientes.php';
 require_once 'Conexion.php';
 
-// Arreglo para almacenar las cabañas, reservas y clientes
-$cabanas = [];
-$reservas = [];
-$clientes = [];
-
 // Menú de ingreso al sistema
 
 while (true) {
