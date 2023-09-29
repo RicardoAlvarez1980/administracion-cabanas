@@ -700,9 +700,7 @@ function agregarReserva($conexion)
             return;
         }
 
-        $diasReserva = ceil(($fechaFinTimestamp - $fechaInicioTimestamp) / (60 * 60 * 24));
 
-        $costoTotal = $costoDiario * $diasReserva;
     } else {
         echo "Error al calcular el costo total de la reserva.\n";
         return;
