@@ -1,8 +1,21 @@
 <?php
-require_once 'Cabanas.php';
-require_once 'Reservas.php';
-require_once 'Clientes.php';
 require_once 'Conexion.php';
+
+function menu($titulo, $opciones) {
+    echo (PHP_EOL);
+    echo ('---------------------------'.PHP_EOL);
+    echo ($titulo.PHP_EOL);
+    echo ('---------------------------'.PHP_EOL);
+
+    foreach ($opciones as $opcion) {
+        echo ($opcion[0] .'-'. $opcion[1]. PHP_EOL );
+    } 
+
+    $opcion = readline('Elija una opcion: ');
+    $funcion = $opciones[$opcion][2];
+
+    call_user_func($funcion);
+}
 
 // Menú de ingreso al sistema
 
