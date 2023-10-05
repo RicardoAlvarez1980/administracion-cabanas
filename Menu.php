@@ -13,8 +13,10 @@ function menu($titulo, $opciones) {
 
     $opcion = readline('Elija una opcion: ');
     $funcion = $opciones[$opcion][2];
+    $argumentos = $opciones[$opcion][3]; // Obtener los argumentos
 
-    call_user_func($funcion);
+    // Llamar a la función con los argumentos apropiados
+    call_user_func_array($funcion, $argumentos);
 }
 
 // Menú de ingreso al sistema
@@ -49,67 +51,8 @@ while (true) {
     }
 }
 // Menú Secundario
-function GestorGeneral()
-{
-    while (true) {
 
-        echo "\nGestión General del Sistema\n";
-        echo "1. Gestionar Clientes\n";
-        echo "2. Gestionar Cabañas\n";
-        echo "3. Gestionar Reservas\n";
-        echo "0. Volver al menu anterior\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
-        switch ($opcion) {
-            case 1:
-                gestionarClientes();
-                break;
-            case 2:
-                gestionarCabanas();
-                break;
-            case 3:
-                gestionarReservas();
-                break;
-            case 0:
-                echo "Volviendo al Menú Principal\n";
-                return;
-            default:
-                echo "Opción inválida. Intente nuevamente.\n";
-                break;
-        }
-    }
-}
-function menuListados()
-{
-    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
-
-    while (true) {
-        echo "\nListados:\n";
-        echo "1. Listar Clientes\n";
-        echo "2. Listar Cabañas\n";
-        echo "3. Listar Reservas\n";
-        echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
-
-        switch ($opcion) {
-            case 1:
-                listarClientes($conexion);
-                break;
-            case 2:
-                listarCabanas($conexion);
-                break;
-            case 3:
-                listarReservas($conexion);
-                break;
-            case 0:
-                echo "Volviendo al Menú Principal\n";
-                return;
-            default:
-                echo "Opción inválida. Intente nuevamente.\n";
-                break;
-        }
-    }
-}
 
 // Funciones para gestionar las cabañas
 function gestionarCabanas()
