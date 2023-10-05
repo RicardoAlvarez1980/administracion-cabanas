@@ -19,37 +19,7 @@ function menu($titulo, $opciones) {
     call_user_func_array($funcion, $argumentos);
 }
 
-// Menú de ingreso al sistema
 
-while (true) {
-    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
-
-    echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
-    echo "1. Gestión general del Sistema\n";
-    echo "2. Búsqueda de Clientes\n";
-    echo "3. Listados de Clientes, Cabañas y Reservas\n";
-    echo "0. Salir\n";
-    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
-
-    switch ($opcion) {
-        case 1:
-            GestorGeneral();
-            break;
-        case 2:
-            buscarClientesMenu($conexion);
-            break;
-        case 3:
-            menuListados();
-            break;
-        case 0:
-            echo "¡Hasta luego!\n";
-            exit;
-
-        default:
-            echo "Opción inválida. Intente nuevamente.\n";
-            break;
-    }
-}
 // Menú Secundario
 
 

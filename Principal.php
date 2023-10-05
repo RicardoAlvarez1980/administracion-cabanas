@@ -14,7 +14,7 @@ function menuPrincipal() {
     
     $opcionesPrincipales = [
         ['0', 'Salir', 'salir',[]],
-        ['1', 'Gestión general del Sistema', 'GestorGeneral',[]],
+        ['1', 'Gestión general del Sistema V2.0', 'GestorGeneral',[]],
         ['2', 'Búsqueda de Clientes', 'buscarClientesMenu',[$conexion]],
         ['3', 'Listados de Clientes, Cabañas y Reservas', 'menuListados',[]],
     ];
@@ -47,3 +47,4 @@ function menuListados() {
     menu('Listados', $opcionesPrincipales);
 
 }
+menuPrincipal();
