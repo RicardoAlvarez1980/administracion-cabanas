@@ -2,7 +2,6 @@
 require_once 'cabanas.php';
 require_once 'reservas.php';
 require_once 'clientes.php';
-require_once 'busquedas.php';
 require_once 'data.php';
 
 
@@ -12,107 +11,106 @@ $reservas = [];
 $clientes = [];
 
 // Menú de ingreso al sistema
-while(true){
+while (true) {
     echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
     echo "1. Gestión general del Sistema\n";
     echo "2. Búsqueda de Clientes\n";
     echo "3. Listados de Clientes, Cabañas y Reservas\n";
     echo "0. Salir\n";
-    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
-    switch ($opcion){
+    switch ($opcion) {
         case 1:
             GestorGeneral();
             break;
-        
+
         case 2:
-            buscarClientesMenu();
+            buscarClientes();
             break;
         case 3:
             menuListados();
             break;
         case 0:
-        echo "¡Hasta luego!\n";
-        
-            guardarClientes($clientes);
-    
+            echo "¡Hasta luego!\n";
             exit;
             return [];
-        
+
         default:
             echo "Opción inválida. Intente nuevamente.\n";
-            break;    
+            break;
     }
-
 }
 
 
 // Menú Secundario
-function GestorGeneral(){
-while (true) {
+function GestorGeneral()
+{
+    while (true) {
 
-    echo "\nGestión General del Sistema\n";
-    echo "1. Gestionar Clientes\n";
-    echo "2. Gestionar Cabañas\n";
-    echo "3. Gestionar Reservas\n";
-    echo "0. Volver al menu anterior\n";
-    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        echo "\nGestión General del Sistema\n";
+        echo "1. Gestionar Clientes\n";
+        echo "2. Gestionar Cabañas\n";
+        echo "3. Gestionar Reservas\n";
+        echo "0. Volver al menu anterior\n";
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
-    switch ($opcion) {
-        case 1:
-            gestionarClientes();
-            break;
+        switch ($opcion) {
+            case 1:
+                gestionarClientes();
+                break;
 
-        case 2:
-            gestionarCabanas();
-            break;
+            case 2:
+                gestionarCabanas();
+                break;
 
-        case 3:
-            gestionarReservas();
-            break;
+            case 3:
+                gestionarReservas();
+                break;
 
-        case 0:
-            echo "Volviendo al Menú Principal\n";
-            return;
+            case 0:
+                echo "Volviendo al Menú Principal\n";
+                return;
 
-        default:
-            echo "Opción inválida. Intente nuevamente.\n";
-            break;
+            default:
+                echo "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
     }
-}}
+}
 
 //Revisar la ubicación de esta función
-function menuListados(){
-    while(true) {
+function menuListados()
+{
+    while (true) {
         echo "\nListados:\n";
         echo "1. Listar Clientes\n";
         echo "2. Listar Cabañas\n";
         echo "3. Listar Reservas\n";
         echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
-    switch ($opcion) {
-        case 1:
-            listarClientes();
-            break;
+        switch ($opcion) {
+            case 1:
+                listarClientes();
+                break;
 
-        case 2:
-            listarCabanas();
-            break;
+            case 2:
+                listarCabanas();
+                break;
 
-        case 3:
-            listarReservas();
-            break;
+            case 3:
+                listarReservas();
+                break;
 
-        case 0:
-            echo "Volviendo al Menú Principal\n";
-            return;
+            case 0:
+                echo "Volviendo al Menú Principal\n";
+                return;
 
-        default:
-            echo "Opción inválida. Intente nuevamente.\n";
-            break;
-    }}
-
+            default:
+                echo "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
+    }
 }
 
 
@@ -128,13 +126,13 @@ function gestionarCabanas()
         echo "2. Actualizar Cabaña\n";
         echo "3. Eliminar Cabaña\n";
         echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
                 agregarCabana();
-        
+
                 break;
             case 2:
                 actualizarCabana();
@@ -266,12 +264,12 @@ function gestionarClientes()
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
         echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                agregarCliente();
+                crearCliente();
                 break;
 
             case 2:
@@ -294,39 +292,40 @@ function gestionarClientes()
     }
 }
 
-function listarClientes()
-{
-    global $clientes;
+function listarClientes() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
 
-    if (empty($clientes)) {
-        echo "No hay clientes registrados.\n";
-    } else {
-        echo "Listado de Clientes:\n";
-        echo "---------------------------\n";
+    echo "\nLista de Clientes:\n";
+
+    // Verificar si hay clientes para listar
+    if (!empty($clientes)) {
         foreach ($clientes as $cliente) {
-            echo "ID: " . $cliente->getId() . "\n";
-            echo "Nombre: " . $cliente->getNombre() . "\n";
-            echo "Dirección: " . $cliente->getDireccion() . "\n";
-            echo "Teléfono: " . $cliente->getTelefono() . "\n";
-            echo "Email: " . $cliente->getEmail() . "\n";
-            echo "---------------------------\n";
+            echo "DNI: " . $cliente['dni'] . "\n";
+            echo "Nombre: " . $cliente['nombre'] . "\n";
+            echo "Dirección: " . $cliente['direccion'] . "\n";
+            echo "Teléfono: " . $cliente['telefono'] . "\n";
+            echo "Email: " . $cliente['email'] . "\n";
+            echo str_repeat('-', 30) . "\n"; // Línea de separación
         }
+    } else {
+        echo "No hay clientes registrados.\n";
     }
 }
 
-function agregarCliente()
+function crearCliente()
 {
-    global $clientes;
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
 
     echo "\nAgregar Cliente\n";
-    echo "Ingrese el ID del cliente: ";
-    $id = intval(trim(fgets(STDIN)));
+    echo "Ingrese el DNI del cliente: ";
+    $dni = intval(trim(fgets(STDIN)));
 
-    foreach ($clientes as $cliente) {
-        if ($cliente->getId() === $id) {
-            echo "Ya existe un cliente con ese ID. Intente nuevamente.\n";
-            return;
-        }
+    // Verificar si ya existe un cliente con el mismo ID
+    if (isset($clientes[$dni])) {
+        echo "Ya existe un cliente con ese ID. Intente nuevamente.\n";
+        return;
     }
 
     echo "Ingrese el nombre del cliente: ";
@@ -338,89 +337,139 @@ function agregarCliente()
     echo "Ingrese el email del cliente: ";
     $email = trim(fgets(STDIN));
 
-    $cliente = new Clientes($id, $nombre, $direccion, $telefono, $email);
-    $clientes[] = $cliente;
+    // Crear un nuevo cliente como un array asociativo
+    $nuevoCliente = [
+        'dni' => $dni,
+        'nombre' => $nombre,
+        'direccion' => $direccion,
+        'telefono' => $telefono,
+        'email' => $email,
+    ];
+
+    // Asignar el nuevo cliente al array de clientes utilizando el ID como clave
+    $clientes[$dni] = $nuevoCliente;
+
+    // Guardar la lista actualizada de clientes en el archivo JSON
+    guardarClientes($clientes);
 
     echo "Cliente agregado exitosamente.\n";
 }
 
-function actualizarCliente()
-{
-    global $clientes;
+
+// Función para eliminar un cliente por su ID
+function eliminarCliente() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
+
+    echo "\nEliminar Cliente\n";
+    echo "Ingrese el DNI del cliente a eliminar: ";
+    $dni = intval(trim(fgets(STDIN)));
+
+    // Verificar si el cliente existe en la lista de clientes
+    if (isset($clientes[$dni])) {
+        echo "Cliente encontrado:\n";
+        echo "DNI: " . $clientes[$dni]['id'] . "\n";
+        echo "Nombre: " . $clientes[$dni]['nombre'] . "\n";
+        echo "Dirección: " . $clientes[$dni]['direccion'] . "\n";
+        echo "Teléfono: " . $clientes[$dni]['telefono'] . "\n";
+        echo "Email: " . $clientes[$dni]['email'] . "\n";
+
+        // Pedir confirmación para eliminar el cliente
+        echo "¿Desea eliminar este cliente? (S/N): ";
+        $confirmacion = trim(fgets(STDIN));
+
+        if (strtoupper($confirmacion) === 'S') {
+            // Eliminar el cliente del array de clientes utilizando el ID como clave
+            unset($clientes[$dni]);
+
+            // Guardar la lista actualizada de clientes en el archivo JSON
+            guardarClientes($clientes);
+
+            echo "Cliente eliminado exitosamente.\n";
+        } else {
+            echo "Operación de eliminación cancelada.\n";
+        }
+    } else {
+        echo "No se encontró un cliente con el ID especificado.\n";
+    }
+}
+
+// Función para actualizar los datos de un cliente por su ID
+function actualizarCliente() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
 
     echo "\nActualizar Cliente\n";
     echo "Ingrese el ID del cliente a actualizar: ";
-    $id = intval(trim(fgets(STDIN)));
+    $dni = intval(trim(fgets(STDIN)));
 
-    foreach ($clientes as $cliente) {
-        if ($cliente->getId() === $id) {
-            echo "Ingrese el nuevo nombre del cliente: ";
-            $nombre = trim(fgets(STDIN));
-            echo "Ingrese la nueva dirección del cliente: ";
-            $direccion = trim(fgets(STDIN));
-            echo "Ingrese el nuevo teléfono del cliente: ";
-            $telefono = trim(fgets(STDIN));
-            echo "Ingrese el nuevo email del cliente: ";
-            $email = trim(fgets(STDIN));
+    // Verificar si el cliente existe en la lista de clientes
+    if (isset($clientes[$dni])) {
+        echo "Cliente encontrado. Ingrese los nuevos datos:\n";
 
-            $cliente->setNombre($nombre);
-            $cliente->setDireccion($direccion);
-            $cliente->setTelefono($telefono);
-            $cliente->setEmail($email);
+        // Solicitar al usuario los nuevos datos (nombre, dirección, teléfono y email)
+        echo "Ingrese el nuevo nombre del cliente: ";
+        $clientes[$dni]['nombre'] = trim(fgets(STDIN));
 
-            echo "Cliente actualizado exitosamente.\n";
-            return;
-        }
-    }
+        echo "Ingrese la nueva dirección del cliente: ";
+        $clientes[$dni]['direccion'] = trim(fgets(STDIN));
 
-    echo "No se encontró un cliente con el ID especificado.\n";
-}
+        echo "Ingrese el nuevo teléfono del cliente: ";
+        $clientes[$dni]['telefono'] = trim(fgets(STDIN));
 
-function eliminarCliente()
-{
-    global $clientes;
+        echo "Ingrese el nuevo email del cliente: ";
+        $clientes[$dni]['email'] = trim(fgets(STDIN));
 
-    echo "\nEliminar Cliente\n";
-    echo "Ingrese el ID del cliente a eliminar: ";
-    $id = intval(trim(fgets(STDIN)));
+        // Guardar la lista actualizada de clientes en el archivo JSON
+        guardarClientes($clientes);
 
-    foreach ($clientes as $key => $cliente) {
-        if ($cliente->getId() === $id) {
-            unset($clientes[$key]);
-            echo "Cliente eliminado exitosamente.\n";
-            return;
-        }
-    }
-
-    echo "No se encontró un cliente con el ID especificado.\n";
-}
-
-function buscarClientesMenu()
-{
-    echo "\nBuscar Clientes\n";
-    $parametroBusqueda = readline("Ingrese el término de búsqueda: ");
-    $resultados = buscarClientes($parametroBusqueda);
-
-    if (empty($resultados)) {
-        echo "No se encontraron clientes que coincidan con la búsqueda.\n";
-        //Discutir con Mariano a nivel programación si está bien visto que se pueda agregar clientes dentro de la busqueda.
-        $opcion = readline( "Desea agregar un nuevo cliente? S (si) , N (no): ");
-        if ($opcion == "S" or $opcion == "s"){
-            agregarCliente();
-        } 
-    
+        echo "Cliente actualizado exitosamente.\n";
     } else {
-        echo "Resultados de la búsqueda:\n";
-        foreach ($resultados as $cliente) {
-            echo "ID: " . $cliente->getId() . "\n";
-            echo "Nombre: " . $cliente->getNombre() . "\n";
-            echo "Dirección: " . $cliente->getDireccion() . "\n";
-            echo "Teléfono: " . $cliente->getTelefono() . "\n";
-            echo "Email: " . $cliente->getEmail() . "\n";
-            echo "---------------------------\n";
-        }
+        echo "No se encontró un cliente con el ID especificado.\n";
     }
 }
+
+
+function buscarClientes() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
+
+    echo "\nBuscar Clientes\n";
+    echo "Ingrese el nombre o parte del nombre del cliente a buscar: ";
+    $busqueda = trim(fgets(STDIN));
+
+    // Inicializar un array para almacenar los resultados de la búsqueda
+    $resultados = [];
+
+    // Realizar la búsqueda en la lista de clientes
+    foreach ($clientes as $cliente) {
+        // Convertir el nombre del cliente y la búsqueda a minúsculas para hacer una búsqueda insensible a mayúsculas y minúsculas
+        $nombreCliente = strtolower($cliente['nombre']);
+        $busqueda = strtolower($busqueda);
+
+        // Si se encuentra una coincidencia en el nombre del cliente, se agrega a los resultados
+        if (strpos($nombreCliente, $busqueda) !== false) {
+            $resultados[] = $cliente;
+        }
+    }
+
+    // Mostrar los resultados de la búsqueda
+    if (!empty($resultados)) {
+        echo "Resultados de la búsqueda:\n";
+        foreach ($resultados as $resultado) {
+            echo "DNI: " . $resultado['dni'] . "\n";
+            echo "Nombre: " . $resultado['nombre'] . "\n";
+            echo "Dirección: " . $resultado['direccion'] . "\n";
+            echo "Teléfono: " . $resultado['telefono'] . "\n";
+            echo "Email: " . $resultado['email'] . "\n";
+            echo str_repeat('-', 30) . "\n"; // Línea de separación
+        }
+    } else {
+        echo "No se encontraron clientes que coincidan con la búsqueda.\n";
+    }
+}
+
+
 
 // Funciones para gestionar las reservas
 function gestionarReservas()
@@ -434,7 +483,7 @@ function gestionarReservas()
         echo "3. Eliminar Reserva\n";
 
         echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ") ;
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
         switch ($opcion) {
             case 1:
@@ -618,19 +667,20 @@ function eliminarReserva()
 
     echo "No se encontró una reserva con el número especificado.\n";
 }
- function guardarClientes($clientes) {
-    print_r($clientes);
-    file_put_contents('clientes.json', json_encode($clientes, JSON_PRETTY_PRINT));
-}
-
- function cargarClientes() {
+// Función para cargar los datos de clientes desde un archivo JSON
+function cargarClientes()
+{
     if (file_exists('clientes.json')) {
         $jsonDatos = file_get_contents('clientes.json');
-        return json_decode($jsonDatos);
+        return json_decode($jsonDatos, true);
     }
     return [];
-} 
+}
+
+// Función para guardar los datos de clientes en un archivo JSON
+function guardarClientes($clientes)
+{
+    $jsonData = json_encode($clientes, JSON_PRETTY_PRINT);
+    file_put_contents('clientes.json', $jsonData);
+}
 //MODIFICAR CODIGO DE RESERVA (ID DE RESERVA)
-
-?>
-

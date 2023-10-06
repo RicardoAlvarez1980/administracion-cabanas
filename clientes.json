@@ -1,18 +1,23 @@
-[
-    {
-        "id": 1,
-        "nombre": "adrian",
-        "direccion": "sfde",
-        "telefono": "dsf",
-        "email": "sdc",
-        "reservas": []
+{
+    "2": {
+        "dni": 2,
+        "nombre": "Ricardo",
+        "direccion": "lsvihjb",
+        "telefono": "dicsi",
+        "email": "ocjdi"
     },
-    {
-        "id": 2,
-        "nombre": "ricardo",
-        "direccion": "faefe",
-        "telefono": "aecea",
-        "email": "aecdea",
-        "reservas": []
+    "3": {
+        "dni": 3,
+        "nombre": "alberto",
+        "direccion": "icsji",
+        "telefono": "isdjci",
+        "email": "kcsndoj"
+    },
+    "4": {
+        "dni": 4,
+        "nombre": "Adrian",
+        "direccion": "lsdicjsd",
+        "telefono": "sdjid",
+        "email": "odjics"
     }
-]
+}
