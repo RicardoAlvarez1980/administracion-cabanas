@@ -12,5 +12,12 @@
         "direccion": "moreno 334",
         "telefono": "24255263",
         "email": "pedro@mail.com"
+    },
+    "34853019": {
+        "dni": 34853019,
+        "nombre": "Adrian",
+        "direccion": "11 de septiembre 568",
+        "telefono": "2494377909",
+        "email": "adriancoroneltandil@gmail.com"
     }
 }
