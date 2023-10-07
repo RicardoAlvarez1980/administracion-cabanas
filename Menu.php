@@ -129,25 +129,17 @@ function gestionarCabanas()
             case 1:
                 echo "---------------------------\n";
                 agregarCabana();
-
                 break;
             case 2:
                 actualizarCabana();
                 break;
-
             case 3:
                 eliminarCabana();
-
                 break;
-
-
             case 0:
-
                 echo "Volviendo al Menú Principal...\n";
                 return;
-
             default:
-
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }
@@ -667,8 +659,8 @@ function eliminarReserva()
 // Función para cargar los datos de clientes desde un archivo JSON
 function cargarClientes()
 {
-    if (file_exists('clientes.json')) {
-        $jsonDatos = file_get_contents('clientes.json');
+    if (file_exists('./JSON/clientes.json')) {
+        $jsonDatos = file_get_contents('./JSON/clientes.json');
         return json_decode($jsonDatos, true);
     }
     return [];
@@ -678,6 +670,6 @@ function cargarClientes()
 function guardarClientes($clientes)
 {
     $jsonData = json_encode($clientes, JSON_PRETTY_PRINT);
-    file_put_contents('clientes.json', $jsonData);
+    file_put_contents('./JSON/clientes.json', $jsonData);
 }
 
