@@ -1,0 +1,23 @@
+{
+    "2": {
+        "dni": 2,
+        "nombre": "Ricardo",
+        "direccion": "lsvihjb",
+        "telefono": "dicsi",
+        "email": "ocjdi"
+    },
+    "3": {
+        "dni": 3,
+        "nombre": "Juan",
+        "direccion": "Sarmiento 1888",
+        "telefono": "0249444444",
+        "email": "mail@mail.com"
+    },
+    "28200262": {
+        "dni": 28200262,
+        "nombre": "Ricardo",
+        "direccion": "Saavedra 750",
+        "telefono": "2234268273",
+        "email": "ricardo@mail.com"
+    }
+}

@@ -1,33 +1,122 @@
 <?php
-require_once 'Conexion.php';
+require_once 'cabanas.php';
+require_once 'reservas.php';
+require_once 'clientes.php';
+require_once 'data.php';
 
-function menu($titulo, $opciones) {
-    echo (PHP_EOL);
-    echo ('---------------------------'.PHP_EOL);
-    echo ($titulo.PHP_EOL);
-    echo ('---------------------------'.PHP_EOL);
 
-    foreach ($opciones as $opcion) {
-        echo ($opcion[0] .'-'. $opcion[1]. PHP_EOL );
-    } 
+// Arreglo para almacenar las cabañas, reservas y clientes
+$cabanas = [];
+$reservas = [];
+$clientes = [];
 
-    $opcion = readline('Elija una opcion: ');
-    $funcion = $opciones[$opcion][2];
-    $argumentos = $opciones[$opcion][3]; // Obtener los argumentos
+// Menú de ingreso al sistema
+while (true) {
+    echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
+    echo "1. Gestión general del Sistema\n";
+    echo "2. Búsqueda de Clientes\n";
+    echo "3. Listados de Clientes, Cabañas y Reservas\n";
+    echo "0. Salir\n";
+    $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
-    // Llamar a la función con los argumentos apropiados
-    call_user_func_array($funcion, $argumentos);
+    switch ($opcion) {
+        case 1:
+            GestorGeneral();
+            break;
+
+        case 2:
+            buscarClientes();
+            break;
+        case 3:
+            menuListados();
+            break;
+        case 0:
+            echo "¡Hasta luego!\n";
+            exit;
+        default:
+            echo "Opción inválida. Intente nuevamente.\n";
+            break;
+    }
 }
 
-
 // Menú Secundario
+function GestorGeneral()
+{
+    while (true) {
+
+        echo "\nGestión General del Sistema\n";
+        echo "1. Gestionar Clientes\n";
+        echo "2. Gestionar Cabañas\n";
+        echo "3. Gestionar Reservas\n";
+        echo "0. Volver al menu anterior\n";
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
+
+        switch ($opcion) {
+            case 1:
+                gestionarClientes();
+                break;
+
+            case 2:
+                gestionarCabanas();
+                break;
+
+            case 3:
+                gestionarReservas();
+                break;
+
+            case 0:
+                echo "Volviendo al Menú Principal\n";
+                return;
+
+            default:
+                echo "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
+    }
+}
+
+//Revisar la ubicación de esta función
+function menuListados()
+{
+    while (true) {
+        echo "\nListados:\n";
+        echo "1. Listar Clientes\n";
+        echo "2. Listar Cabañas\n";
+        echo "3. Listar Reservas\n";
+        echo "0. Volver al Menú Principal\n";
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
+
+        switch ($opcion) {
+            case 1:
+                listarClientes();
+                break;
+
+            case 2:
+                listarCabanas();
+                break;
+
+            case 3:
+                listarReservas();
+                break;
+
+            case 0:
+                echo "Volviendo al Menú Principal\n";
+                return;
+
+            default:
+                echo "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
+    }
+}
 
 
 
 // Funciones para gestionar las cabañas
 function gestionarCabanas()
 {
-    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
+    global $cabanas;
+
     while (true) {
         echo "\nBienvenido al menú de gestión de Cabañas:\n";
         echo "1. Agregar Cabaña\n";
@@ -35,61 +124,70 @@ function gestionarCabanas()
         echo "3. Eliminar Cabaña\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
+
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                agregarCabana($conexion);
+                agregarCabana();
+
                 break;
             case 2:
-                actualizarCabana($conexion);
+                actualizarCabana();
                 break;
+
             case 3:
-                eliminarCabana($conexion);
+                eliminarCabana();
+
                 break;
+
+
             case 0:
+
                 echo "Volviendo al Menú Principal...\n";
                 return;
+
             default:
+
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }
     }
 }
-function listarCabanas($conexion)
+
+function listarCabanas()
 {
-    $query = "SELECT * FROM Cabanas";
-    $resultado = $conexion->query($query);
+    global $cabanas;
 
-    if ($resultado) {
-        $cabanas = $resultado->fetchAll(PDO::FETCH_ASSOC);
-
-        if (empty($cabanas)) {
-            echo "No hay cabañas registradas.\n";
-        } else {
-            echo "Listado de Cabañas:\n";
-            echo "---------------------------\n";
-            foreach ($cabanas as $cabana) {
-                echo "Número: " . $cabana['numero'] . "\n";
-                echo "Capacidad: " . $cabana['capacidad'] . "\n";
-                echo "Descripción: " . $cabana['descripcion'] . "\n";
-                echo "Costo Diario: $" . $cabana['costodiario'] . "\n";
-                echo "---------------------------\n";
-            }
-        }
+    if (empty($cabanas)) {
+        echo "No hay cabañas registradas.\n";
     } else {
-        echo "Error en la consulta: " . $conexion->errorInfo()[2];
+        echo "Listado de Cabañas:\n";
+        echo "---------------------------\n";
+        foreach ($cabanas as $cabana) {
+            echo "Número: " . $cabana->getNumero() . "\n";
+            echo "Capacidad: " . $cabana->getCapacidad() . "\n";
+            echo "Descripción: " . $cabana->getDescripcion() . "\n";
+            echo "Costo Diario: " . $cabana->getCostoDiario() . "\n";
+            echo "---------------------------\n";
+        }
     }
 }
 
-function agregarCabana($conexion)
+function agregarCabana()
 {
+    global $cabanas;
+
     echo "\nAgregar Cabaña\n";
     echo "Ingrese el número de la cabaña: ";
     $numero = intval(trim(fgets(STDIN)));
 
     // Verificar si el número de cabaña ya existe
-    $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
-    $stmt = $conexion->prepare($consulta);
+    foreach ($cabanas as $cabana) {
+        if ($cabana->getNumero() === $numero) {
+            echo "Ya existe una cabaña con ese número. Intente nuevamente.\n";
+            return;
+        }
+    }
 
     echo "Ingrese la capacidad de la cabaña: ";
     $capacidad = intval(trim(fgets(STDIN)));
@@ -98,136 +196,92 @@ function agregarCabana($conexion)
     echo "Ingrese el costo diario de la cabaña: ";
     $costoDiario = floatval(trim(fgets(STDIN)));
 
-    // Agrega la cabaña a la base de datos.
-    $query = "INSERT INTO Cabanas (numero, capacidad, descripcion, costodiario) VALUES (?, ?, ?, ?)";
-    $stmt = $conexion->prepare($query);
+    $cabana = new Cabanas($numero, $capacidad, $descripcion, $costoDiario);
+    $cabanas[] = $cabana;
 
-    if ($stmt) {
-        $stmt->bindParam(1, $numero);
-        $stmt->bindParam(2, $capacidad);
-        $stmt->bindParam(3, $descripcion);
-        $stmt->bindParam(4, $costoDiario);
-
-        if ($stmt->execute()) {
-            echo "Cabaña agregada exitosamente.\n";
-        } else {
-            echo "Error al agregar la cabaña: " . $stmt->errorInfo()[2] . "\n";
-        }
-    } else {
-        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
-    }
+    echo "La cabaña nº " . $cabana->getNumero() . " fue agregada exitosamente.\n";
 }
 
-function actualizarCabana($conexion)
+function actualizarCabana()
 {
+    global $cabanas;
+
     echo "\nActualizar Cabaña\n";
     echo "Ingrese el número de la cabaña a actualizar: ";
     $numero = intval(trim(fgets(STDIN)));
 
-    // Comprobamos si la cabaña  existe en la base de datos
-    $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
-    $stmt = $conexion->prepare($consulta);
-
-    if ($stmt) {
-        $stmt->bindParam(1, $numero);
-        $stmt->execute();
-        $cabana = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($cabana) {
+    foreach ($cabanas as $cabana) {
+        if ($cabana->getNumero() === $numero) {
             echo "Ingrese la nueva capacidad de la cabaña: ";
             $capacidad = intval(trim(fgets(STDIN)));
             echo "Ingrese la nueva descripción de la cabaña: ";
             $descripcion = trim(fgets(STDIN));
             echo "Ingrese el nuevo costo diario de la cabaña: ";
             $costoDiario = floatval(trim(fgets(STDIN)));
-        }
-        // Actualizamos los datos de la cabaña en la base de datos
-        $actualizarConsulta = "UPDATE Cabanas SET capacidad = ?, descripcion = ?, costodiario = ? WHERE numero = ?";
-        $stmtActualizar = $conexion->prepare($actualizarConsulta);
-        if ($stmtActualizar) {
-            $stmtActualizar->bindParam(1, $capacidad);
-            $stmtActualizar->bindParam(2, $descripcion);
-            $stmtActualizar->bindParam(3, $costoDiario);
-            $stmtActualizar->bindParam(4, $numero);
 
-            if ($stmtActualizar->execute()) {
-                echo "Canbaña actualizado exitosamente.\n";
-            } else {
-                echo "Error al actualizar la cabaña: " . $stmtActualizar->errorInfo()[2] . "\n";
-            }
-        } else {
-            echo "Error en la preparación de la consulta de actualización: " . $conexion->errorInfo()[2] . "\n";
+            $cabana->setCapacidad($capacidad);
+            $cabana->setDescripcion($descripcion);
+            $cabana->setCostoDiario($costoDiario);
+
+            echo "Cabaña actualizada exitosamente.\n";
+            return;
         }
-    } else {
-        echo "No se encontró una cabaña con el número especificado.\n";
     }
+
+    echo "No se encontró una cabaña con el número especificado.\n";
 }
 
-function eliminarCabana($conexion)
+function eliminarCabana()
 {
+    global $cabanas;
+
     echo "\nEliminar Cabaña\n";
     echo "Ingrese el número de la cabaña a eliminar: ";
     $numero = intval(trim(fgets(STDIN)));
 
-    // Verificamos si la cabaña existe en la base de datos
-    $consulta = "SELECT * FROM Cabanas WHERE numero = ?";
-    $stmt = $conexion->prepare($consulta);
-
-    if ($stmt) {
-        $stmt->bindParam(1, $numero);
-        $stmt->execute();
-        $cabana = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($cabana) {
-            //Eliminamos la cabaña de la base de datos.
-            $eliminarConsulta = "DELETE FROM Cabanas WHERE numero = ?";
-            $stmtEliminar = $conexion->prepare($eliminarConsulta);
-            if ($stmtEliminar) {
-                $stmtEliminar->bindParam(1, $numero);
-                if ($stmtEliminar->execute()) {
-                    echo "Cabaña eliminada exitosamente.\n";
-                } else {
-                    echo "Error al eliminar la cabaña: " . $stmtEliminar->errorInfo()[2] . "\n";
-                }
-            } else {
-                echo "Error en la preparación de la consulta de eliminación: " . $conexion->errorInfo()[2] . "\n";
-            }
-        } else {
-            echo "No se encontró una cabaña con el número especificado.\n";
+    foreach ($cabanas as $key => $cabana) {
+        if ($cabana->getNumero() === $numero) {
+            unset($cabanas[$key]);
+            echo "Cabaña eliminada exitosamente.\n";
+            return;
         }
-    } else {
-        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
     }
+
+    echo "No se encontró una cabaña con el número especificado.\n";
 }
-// MENU DE GESTIÓN DE CLIENTES
+
+// Funciones para gestionar los clientes
 function gestionarClientes()
 {
-    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
+    global $clientes;
 
     while (true) {
         echo "\nMenú de Clientes\n";
         echo "1. Agregar Cliente\n";
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
-        echo "4. Buscar Clientes\n";
         echo "0. Volver al Menú Principal\n";
         $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
 
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                agregarCliente($conexion);
+                crearCliente();
                 break;
+
             case 2:
-                actualizarCliente($conexion);
+                actualizarCliente();
                 break;
+
             case 3:
-                eliminarCliente($conexion);
+                eliminarCliente();
                 break;
-            case 4:
-                buscarClientesMenu($conexion);
-                break;
+
+
             case 0:
                 echo "Volviendo al Menú Principal...\n";
                 return;
+
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
@@ -235,39 +289,42 @@ function gestionarClientes()
     }
 }
 
-//  FUNCIÓN DE LISTAR CLIENTES
-function listarClientes($conexion)
-{
-    $query = "SELECT * FROM clientes";
-    $resultado = $conexion->query($query);
+function listarClientes() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
 
-    if ($resultado) {
-        $clientes = $resultado->fetchAll(PDO::FETCH_ASSOC);
+    echo "\nLista de Clientes:\n";
 
-        if (empty($clientes)) {
-            echo "No hay clientes registrados.\n";
-        } else {
-            echo "Listado de Clientes:\n";
-            echo "---------------------------\n";
-            foreach ($clientes as $cliente) {
-                echo "DNI: " . $cliente['dni'] . "\n";
-                echo "Nombre: " . $cliente['nombre'] . "\n";
-                echo "Dirección: " . $cliente['direccion'] . "\n";
-                echo "Teléfono: " . $cliente['telefono'] . "\n";
-                echo "Email: " . $cliente['email'] . "\n";
-                echo "---------------------------\n";
-            }
+    // Verificar si hay clientes para listar
+    if (!empty($clientes)) {
+        foreach ($clientes as $cliente) {
+            echo "DNI: " . $cliente['dni'] . "\n";
+            echo "Nombre: " . $cliente['nombre'] . "\n";
+            echo "Dirección: " . $cliente['direccion'] . "\n";
+            echo "Teléfono: " . $cliente['telefono'] . "\n";
+            echo "Email: " . $cliente['email'] . "\n";
+            echo str_repeat('-', 30) . "\n"; // Línea de separación
         }
     } else {
-        echo "Error en la consulta: " . $conexion->errorInfo()[2];
+        echo "No hay clientes registrados.\n";
     }
 }
 
-function agregarCliente($conexion)
+function crearCliente()
 {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
+
     echo "\nAgregar Cliente\n";
-    echo "Ingrese el número de DNI del cliente: ";
-    $dni = trim(fgets(STDIN));
+    echo "Ingrese el DNI del cliente: ";
+    $dni = intval(trim(fgets(STDIN)));
+
+    // Verificar si ya existe un cliente con el mismo ID
+    if (isset($clientes[$dni])) {
+        echo "Ya existe un cliente con ese DNI. Intente nuevamente.\n";
+        return;
+    }
+
     echo "Ingrese el nombre del cliente: ";
     $nombre = trim(fgets(STDIN));
     echo "Ingrese la dirección del cliente: ";
@@ -277,163 +334,144 @@ function agregarCliente($conexion)
     echo "Ingrese el email del cliente: ";
     $email = trim(fgets(STDIN));
 
-    $query = "INSERT INTO clientes (dni, nombre, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conexion->prepare($query);
+    // Crear un nuevo cliente como un array asociativo
+    $nuevoCliente = [
+        'dni' => $dni,
+        'nombre' => $nombre,
+        'direccion' => $direccion,
+        'telefono' => $telefono,
+        'email' => $email,
+    ];
 
-    if ($stmt) {
-        $stmt->bindParam(1, $dni);
-        $stmt->bindParam(2, $nombre);
-        $stmt->bindParam(3, $direccion);
-        $stmt->bindParam(4, $telefono);
-        $stmt->bindParam(5, $email);
+    // Asignar el nuevo cliente al array de clientes utilizando el ID como clave
+    $clientes[$dni] = $nuevoCliente;
 
-        if ($stmt->execute()) {
-            echo "Cliente agregado exitosamente.\n";
-        } else {
-            echo "Error al agregar el cliente: " . $stmt->errorInfo()[2] . "\n";
-        }
-    } else {
-        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
-    }
+    // Guardar la lista actualizada de clientes en el archivo JSON
+    guardarClientes($clientes);
+
+    echo "Cliente agregado exitosamente.\n";
 }
 
-// FUNCIÓN ACTUALIZAR CLIENTE MEDIANTE DNI
-function actualizarCliente($conexion)
-{
-    echo "\nActualizar Cliente\n";
-    echo "Ingrese el DNI del cliente a actualizar: ";
-    $dni = intval(trim(fgets(STDIN)));
 
-    // Comprobamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM clientes WHERE dni = ?";
-    $stmt = $conexion->prepare($consulta);
+// Función para eliminar un cliente por su ID
+function eliminarCliente() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
 
-    if ($stmt) {
-        $stmt->bindParam(1, $dni);
-        $stmt->execute();
-        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($cliente) {
-            echo "Ingrese el nuevo nombre del cliente: ";
-            $nombre = trim(fgets(STDIN));
-            echo "Ingrese la nueva dirección del cliente: ";
-            $direccion = trim(fgets(STDIN));
-            echo "Ingrese el nuevo teléfono del cliente: ";
-            $telefono = trim(fgets(STDIN));
-            echo "Ingrese el nuevo email del cliente: ";
-            $email = trim(fgets(STDIN));
-
-            // Actualizamos los datos del cliente en la base de datos
-            $actualizarConsulta = "UPDATE clientes SET nombre = ?, direccion = ?, telefono = ?, email = ? WHERE dni = ?";
-            $stmtActualizar = $conexion->prepare($actualizarConsulta);
-
-            if ($stmtActualizar) {
-                $stmtActualizar->bindParam(1, $nombre);
-                $stmtActualizar->bindParam(2, $direccion);
-                $stmtActualizar->bindParam(3, $telefono);
-                $stmtActualizar->bindParam(4, $email);
-                $stmtActualizar->bindParam(5, $dni);
-
-                if ($stmtActualizar->execute()) {
-                    echo "Cliente actualizado exitosamente.\n";
-                } else {
-                    echo "Error al actualizar el cliente: " . $stmtActualizar->errorInfo()[2] . "\n";
-                }
-            } else {
-                echo "Error en la preparación de la consulta de actualización: " . $conexion->errorInfo()[2] . "\n";
-            }
-        } else {
-            echo "No se encontró un cliente con el DNI especificado.\n";
-        }
-    } else {
-        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
-    }
-}
-
-// FUNCIÓN ELIMINAR CLIENTE MEDIANTE DNI
-function eliminarCliente($conexion)
-{
     echo "\nEliminar Cliente\n";
     echo "Ingrese el DNI del cliente a eliminar: ";
     $dni = intval(trim(fgets(STDIN)));
 
-    // Verificamos si el cliente existe en la base de datos
-    $consulta = "SELECT * FROM clientes WHERE dni = ?";
-    $stmt = $conexion->prepare($consulta);
+    // Verificar si el cliente existe en la lista de clientes
+    if (isset($clientes[$dni])) {
+        echo "Cliente encontrado:\n";
+        echo "DNI: " . $clientes[$dni]['dni'] . "\n";
+        echo "Nombre: " . $clientes[$dni]['nombre'] . "\n";
+        echo "Dirección: " . $clientes[$dni]['direccion'] . "\n";
+        echo "Teléfono: " . $clientes[$dni]['telefono'] . "\n";
+        echo "Email: " . $clientes[$dni]['email'] . "\n";
 
-    if ($stmt) {
-        $stmt->bindParam(1, $dni);
-        $stmt->execute();
-        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Pedir confirmación para eliminar el cliente
+        echo "¿Desea eliminar este cliente? (S/N): ";
+        $confirmacion = trim(fgets(STDIN));
 
-        if ($cliente) {
-            // Eliminamos el cliente de la base de datos
-            $eliminarConsulta = "DELETE FROM clientes WHERE dni = ?";
-            $stmtEliminar = $conexion->prepare($eliminarConsulta);
+        if (strtoupper($confirmacion) === 'S') {
+            // Eliminar el cliente del array de clientes utilizando el ID como clave
+            unset($clientes[$dni]);
 
-            if ($stmtEliminar) {
-                $stmtEliminar->bindParam(1, $dni);
+            // Guardar la lista actualizada de clientes en el archivo JSON
+            guardarClientes($clientes);
 
-                if ($stmtEliminar->execute()) {
-                    echo "Cliente eliminado exitosamente.\n";
-                } else {
-                    echo "Error al eliminar el cliente: " . $stmtEliminar->errorInfo()[2] . "\n";
-                }
-            } else {
-                echo "Error en la preparación de la consulta de eliminación: " . $conexion->errorInfo()[2] . "\n";
-            }
+            echo "Cliente eliminado exitosamente.\n";
         } else {
-            echo "No se encontró un cliente con el DNI especificado.\n";
+            echo "Operación de eliminación cancelada.\n";
         }
     } else {
-        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
+        echo "No se encontró un cliente con el DNI especificado.\n";
     }
 }
 
-// FUNCIONES PARA BUSCAR CLIENTES (SE REQUIEREN AMBAS)
-function buscarClientes($conexion, $parametroBusqueda)
-{
-    $parametroBusqueda = '%' . $parametroBusqueda . '%'; // Agregamos comodines % para buscar en cualquier parte del nombre
+// Función para actualizar los datos de un cliente por su ID
+function actualizarCliente() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
 
-    $consulta = "SELECT * FROM clientes WHERE nombre ILIKE ?";
-    $stmt = $conexion->prepare($consulta);
+    echo "\nActualizar Cliente\n";
+    echo "Ingrese el DNI del cliente a actualizar: ";
+    $dni = intval(trim(fgets(STDIN)));
 
-    if ($stmt) {
-        $stmt->bindParam(1, $parametroBusqueda);
-        $stmt->execute();
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Verificar si el cliente existe en la lista de clientes
+    if (isset($clientes[$dni])) {
+        echo "Cliente encontrado. Ingrese los nuevos datos:\n";
 
-        return $resultados;
+        // Solicitar al usuario los nuevos datos (nombre, dirección, teléfono y email)
+        echo "Ingrese el nuevo nombre del cliente: ";
+        $clientes[$dni]['nombre'] = trim(fgets(STDIN));
+
+        echo "Ingrese la nueva dirección del cliente: ";
+        $clientes[$dni]['direccion'] = trim(fgets(STDIN));
+
+        echo "Ingrese el nuevo teléfono del cliente: ";
+        $clientes[$dni]['telefono'] = trim(fgets(STDIN));
+
+        echo "Ingrese el nuevo email del cliente: ";
+        $clientes[$dni]['email'] = trim(fgets(STDIN));
+
+        // Guardar la lista actualizada de clientes en el archivo JSON
+        guardarClientes($clientes);
+
+        echo "Cliente actualizado exitosamente.\n";
     } else {
-        echo "Error en la preparación de la consulta: " . $conexion->errorInfo()[2] . "\n";
-        return [];
+        echo "No se encontró un cliente con el DNI especificado.\n";
     }
 }
 
-function buscarClientesMenu($conexion)
-{
+
+function buscarClientes() {
+    // Cargar la lista actual de clientes
+    $clientes = cargarClientes();
+
     echo "\nBuscar Clientes\n";
-    $parametroBusqueda = readline("Ingrese el término de búsqueda: ");
-    $resultados = buscarClientes($conexion, $parametroBusqueda);
+    echo "Ingrese el nombre o parte del nombre del cliente a buscar: ";
+    $busqueda = trim(fgets(STDIN));
 
-    if (empty($resultados)) {
-        echo "No se encontraron clientes que coincidan con la búsqueda.\n";
-    } else {
-        echo "Resultados de la búsqueda:\n";
-        foreach ($resultados as $cliente) {
-            echo "DNI: " . $cliente['dni'] . "\n";
-            echo "Nombre: " . $cliente['nombre'] . "\n";
-            echo "Dirección: " . $cliente['direccion'] . "\n";
-            echo "Teléfono: " . $cliente['telefono'] . "\n";
-            echo "Email: " . $cliente['email'] . "\n";
-            echo "---------------------------\n";
+    // Inicializar un array para almacenar los resultados de la búsqueda
+    $resultados = [];
+
+    // Realizar la búsqueda en la lista de clientes
+    foreach ($clientes as $cliente) {
+        // Convertir el nombre del cliente y la búsqueda a minúsculas para hacer una búsqueda insensible a mayúsculas y minúsculas
+        $nombreCliente = strtolower($cliente['nombre']);
+        $busqueda = strtolower($busqueda);
+
+        // Si se encuentra una coincidencia en el nombre del cliente, se agrega a los resultados
+        if (strpos($nombreCliente, $busqueda) !== false) {
+            $resultados[] = $cliente;
         }
     }
+
+    // Mostrar los resultados de la búsqueda
+    if (!empty($resultados)) {
+        echo "Resultados de la búsqueda:\n";
+        foreach ($resultados as $resultado) {
+            echo "DNI: " . $resultado['dni'] . "\n";
+            echo "Nombre: " . $resultado['nombre'] . "\n";
+            echo "Dirección: " . $resultado['direccion'] . "\n";
+            echo "Teléfono: " . $resultado['telefono'] . "\n";
+            echo "Email: " . $resultado['email'] . "\n";
+            echo str_repeat('-', 30) . "\n"; // Línea de separación
+        }
+    } else {
+        echo "No se encontraron clientes que coincidan con la búsqueda.\n";
+    }
 }
+
+
+
 // Funciones para gestionar las reservas
 function gestionarReservas()
 {
-    $conexion = Conexion::obtenerInstancia()->obtenerConexion();
+    global $reservas, $cabanas, $clientes;
 
     while (true) {
         echo "\nMenú de Reservas\n";
@@ -447,154 +485,122 @@ function gestionarReservas()
         switch ($opcion) {
             case 1:
                 echo "---------------------------\n";
-                agregarReserva($conexion);
+                agregarReserva();
                 break;
+
             case 2:
-                listarReservas($conexion);
-                modificarReserva($conexion, readline("Ingrese el número de la reserva a modificar: "));
+                modificarReserva();
                 break;
+
             case 3:
-                listarReservas($conexion);
-                eliminarReserva($conexion, readline("Ingrese el número de la reserva a eliminar: "));
+                eliminarReserva();
                 break;
+
+
             case 0:
                 echo "Volviendo al Menú Principal...\n";
                 return;
+
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
         }
     }
 }
-function listarReservas($conexion)
+
+function listarReservas()
 {
-    // Consulta SQL para obtener los datos de las reservas
-    $consulta = "SELECT r.numero AS numero_reserva, c.nombre AS nombre_cliente, ca.numero AS numero_cabana,
-                 r.fechaInicio, r.fechaFin, (r.fechaFin - r.fechaInicio) * ca.costoDiario AS costo_total
-                 FROM Reservas r
-                 INNER JOIN Clientes c ON r.cliente_dni = c.DNI
-                 INNER JOIN Cabanas ca ON r.cabana_numero = ca.numero
-                 ORDER BY r.numero";
+    global $reservas;
 
-    $stmt = $conexion->prepare($consulta);
-
-    if ($stmt) {
-        $stmt->execute();
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if (!empty($resultados)) {
-            echo "Listado de Reservas:\n";
-            echo "---------------------------\n";
-            foreach ($resultados as $reserva) {
-                echo "Número de Reserva: " . $reserva['numero_reserva'] . "\n";
-                echo "Cliente: " . $reserva['nombre_cliente'] . "\n";
-                echo "Cabaña: " . $reserva['numero_cabana'] . "\n";
-                echo "Fecha de inicio: " . $reserva['fechainicio'] . "\n";
-                echo "Fecha de fin: " . $reserva['fechafin'] . "\n";
-                echo "Costo de la reserva: $" . $reserva['costo_total'] . "\n";
-                echo "---------------------------\n";
-            }
-        } else {
-            echo "No hay reservas registradas.\n";
-        }
+    if (empty($reservas)) {
+        echo "No hay reservas registradas.\n";
     } else {
-        echo "Error al preparar la consulta.\n";
+        echo "Listado de Reservas:\n";
+        echo "---------------------------\n";
+        foreach ($reservas as $reserva) {
+            echo "Número de Reserva: " . $reserva->getNumero() . "\n";
+            echo "Cliente: " . $reserva->getCliente()->getNombre() . "\n";
+            echo "Cabaña: " . $reserva->getCabana()->getNumero() . "\n";
+            echo "Fecha de inicio: " . $reserva->getFechaInicio() . "\n";
+            echo "Fecha de fin: " . $reserva->getFechaFin() . "\n";
+            echo "Costo de la reserva: " . $reserva->getCostoTotal() . "\n";
+            echo "---------------------------\n";
+        }
     }
 }
 
-// FUNCIÓN AGREGAR RESERVA
-function agregarReserva($conexion)
+function agregarReserva()
 {
+    global $reservas, $cabanas, $clientes;
+
     echo "\nAgregar Reserva\n";
 
-    // Mostrar lista de cabañas disponibles
-    $consultaCabañas = "SELECT numero, capacidad, descripcion, costoDiario FROM Cabanas";
-    $stmtCabañas = $conexion->prepare($consultaCabañas);
+    // Verificar si hay cabañas disponibles
+    if (empty($cabanas)) {
+        echo "No hay cabañas disponibles para reservar.\n";
+        return;
+    }
 
-    if ($stmtCabañas) {
-        $stmtCabañas->execute();
-        $cabañasDisponibles = $stmtCabañas->fetchAll(PDO::FETCH_ASSOC);
+    // Verificar si hay clientes registrados
+    if (empty($clientes)) {
+        echo "No hay clientes registrados para asociar a la reserva.\n";
+        return;
+    }
 
-        if (empty($cabañasDisponibles)) {
-            echo "No hay cabañas disponibles para reservar.\n";
-            return;
+    // Mostrar lista de cabañas
+    echo "Lista de Cabañas Disponibles:\n";
+    foreach ($cabanas as $cabana) {
+        echo "Número: " . $cabana->getNumero() . "\n";
+        echo "Capacidad: " . $cabana->getCapacidad() . "\n";
+        echo "Descripción: " . $cabana->getDescripcion() . "\n";
+        echo "Costo Diario: " . $cabana->getCostoDiario() . "\n";
+        echo "---------------------------\n";
+    }
+
+    // Selección de cabaña
+    echo "Ingrese el número de la cabaña a reservar: ";
+    $numeroCabana = intval(trim(fgets(STDIN)));
+
+    // Verificar si la cabaña existe
+    $cabanaSeleccionada = null;
+    foreach ($cabanas as $cabana) {
+        if ($cabana->getNumero() === $numeroCabana) {
+            $cabanaSeleccionada = $cabana;
+            break;
         }
+    }
 
-        echo "Lista de Cabañas Disponibles:\n";
-        foreach ($cabañasDisponibles as $cabaña) {
-            echo "Número: " . $cabaña['numero'] . "\n";
-            echo "Capacidad: " . $cabaña['capacidad'] . "\n";
-            echo "Descripción: " . $cabaña['descripcion'] . "\n";
-            echo "Costo Diario: $" . $cabaña['costodiario'] . "\n";
-            echo "---------------------------\n";
-        }
-
-        // Selección de cabaña
-        echo "Ingrese el número de la cabaña a reservar: ";
-        $numeroCabana = intval(trim(fgets(STDIN)));
-
-        // Verificar si la cabaña existe
-        $consultaCabañaExiste = "SELECT COUNT(*) FROM Cabanas WHERE numero = ?";
-        $stmtCabañaExiste = $conexion->prepare($consultaCabañaExiste);
-
-        if ($stmtCabañaExiste) {
-            $stmtCabañaExiste->bindParam(1, $numeroCabana);
-            $stmtCabañaExiste->execute();
-            $cabañaExiste = $stmtCabañaExiste->fetchColumn();
-
-            if (!$cabañaExiste) {
-                echo "No se encontró una cabaña con el número especificado.\n";
-                return;
-            }
-        }
-    } else {
-        echo "Error al preparar la consulta de cabañas.\n";
+    if (!$cabanaSeleccionada) {
+        echo "No se encontró una cabaña con el número especificado.\n";
         return;
     }
 
     // Mostrar lista de clientes
-    $consultaClientes = "SELECT DNI, nombre, direccion, telefono, email FROM Clientes";
-    $stmtClientes = $conexion->prepare($consultaClientes);
+    echo "Lista de Clientes:\n";
+    foreach ($clientes as $cliente) {
+        echo "DNI: " . $cliente->getDni() . "\n";
+        echo "Nombre: " . $cliente->getNombre() . "\n";
+        echo "Dirección: " . $cliente->getDireccion() . "\n";
+        echo "Teléfono: " . $cliente->getTelefono() . "\n";
+        echo "Email: " . $cliente->getEmail() . "\n";
+        echo "---------------------------\n";
+    }
 
-    if ($stmtClientes) {
-        $stmtClientes->execute();
-        $clientesDisponibles = $stmtClientes->fetchAll(PDO::FETCH_ASSOC);
+    // Selección de cliente
+    echo "Ingrese el DNI (Solo ingrese números) del cliente que realiza la reserva: ";
+    $dniCliente = intval(trim(fgets(STDIN)));
 
-        if (empty($clientesDisponibles)) {
-            echo "No hay clientes registrados para asociar a la reserva.\n";
-            return;
+    // Verificar si el cliente existe
+    $clienteSeleccionado = null;
+    foreach ($clientes as $cliente) {
+        if ($cliente->getDni() === $dniCliente) {
+            $clienteSeleccionado = $cliente;
+            break;
         }
+    }
 
-        echo "Lista de Clientes:\n";
-        foreach ($clientesDisponibles as $cliente) {
-            echo "DNI: " . $cliente['dni'] . "\n";
-            echo "Nombre: " . $cliente['nombre'] . "\n";
-            echo "Dirección: " . $cliente['direccion'] . "\n";
-            echo "Teléfono: " . $cliente['telefono'] . "\n";
-            echo "Email: " . $cliente['email'] . "\n";
-            echo "---------------------------\n";
-        }
-
-        // Selección de cliente
-        echo "Ingrese el DNI (Solo ingrese números) del cliente que realiza la reserva: ";
-        $dniCliente = intval(trim(fgets(STDIN)));
-
-        // Verificar si el cliente existe
-        $consultaClienteExiste = "SELECT COUNT(*) FROM Clientes WHERE DNI = ?";
-        $stmtClienteExiste = $conexion->prepare($consultaClienteExiste);
-
-        if ($stmtClienteExiste) {
-            $stmtClienteExiste->bindParam(1, $dniCliente);
-            $stmtClienteExiste->execute();
-            $clienteExiste = $stmtClienteExiste->fetchColumn();
-
-            if (!$clienteExiste) {
-                echo "No se encontró un cliente con el DNI especificado.\n";
-                return;
-            }
-        }
-    } else {
-        echo "Error al preparar la consulta de clientes.\n";
+    if (!$clienteSeleccionado) {
+        echo "No se encontró un cliente con el DNI especificado.\n";
         return;
     }
 
@@ -604,148 +610,74 @@ function agregarReserva($conexion)
     echo "Ingrese la fecha de fin de la reserva (formato YYYY-MM-DD): ";
     $fechaFin = trim(fgets(STDIN));
 
-    // Calcular el costo total de la reserva (puedes usar la lógica que mencionaste antes)
-    $consultaCostoDiario = "SELECT costoDiario FROM Cabanas WHERE numero = ?";
-    $stmtCostoDiario = $conexion->prepare($consultaCostoDiario);
+    // Crear un nuevo objeto de reserva
+    $reserva = new Reservas(count($reservas) + 1, $clienteSeleccionado, $cabanaSeleccionada, $fechaInicio, $fechaFin);
+    $reservas[] = $reserva;
 
-    if ($stmtCostoDiario) {
-        $stmtCostoDiario->bindParam(1, $numeroCabana);
-        $stmtCostoDiario->execute();
-        $costoDiario = $stmtCostoDiario->fetchColumn();
+    // Agregar la reserva al cliente
+    $clienteSeleccionado->agregarReserva($reserva);
 
-        $fechaInicioTimestamp = strtotime($fechaInicio);
-        $fechaFinTimestamp = strtotime($fechaFin);
-
-        if ($fechaInicioTimestamp === false || $fechaFinTimestamp === false) {
-            echo "Error en el formato de fecha. Use el formato YYYY-MM-DD.\n";
-            return;
-        }
-
-
-    } else {
-        echo "Error al calcular el costo total de la reserva.\n";
-        return;
-    }
-
-    // Insertar la reserva en la base de datos
-    $consultaInsertarReserva = "INSERT INTO Reservas (cliente_dni, cabana_numero, fechaInicio, fechaFin) VALUES (?, ?, ?, ?)";
-    $stmtInsertarReserva = $conexion->prepare($consultaInsertarReserva);
-
-    if ($stmtInsertarReserva) {
-        $stmtInsertarReserva->bindParam(1, $dniCliente);
-        $stmtInsertarReserva->bindParam(2, $numeroCabana);
-        $stmtInsertarReserva->bindParam(3, $fechaInicio);
-        $stmtInsertarReserva->bindParam(4, $fechaFin);
-
-        if ($stmtInsertarReserva->execute()) {
-            echo "Reserva agregada exitosamente.\n";
-        } else {
-            echo "Error al agregar la reserva.\n";
-        }
-    } else {
-        echo "Error al preparar la consulta de inserción de reserva.\n";
-    }
+    echo "Reserva agregada exitosamente.\n";
 }
-function modificarReserva($conexion, $numeroReserva)
+
+function modificarReserva()
 {
+    global $reservas;
+
     echo "\nModificar Reserva\n";
+    echo "Ingrese el número de reserva a modificar: ";
+    $numeroReserva = intval(trim(fgets(STDIN)));
 
-    // Verificar si la reserva existe en la base de datos
-    $consultaReservaExiste = "SELECT COUNT(*) FROM Reservas WHERE numero = ?";
-    $stmtReservaExiste = $conexion->prepare($consultaReservaExiste);
+    foreach ($reservas as $reserva) {
+        if ($reserva->getNumero() === $numeroReserva) {
+            echo "Ingrese la nueva fecha de inicio de la reserva (formato YYYY-MM-DD): ";
+            $nuevaFechaInicio = trim(fgets(STDIN));
+            echo "Ingrese la nueva fecha de fin de la reserva (formato YYYY-MM-DD): ";
+            $nuevaFechaFin = trim(fgets(STDIN));
 
-    if ($stmtReservaExiste) {
-        $stmtReservaExiste->bindParam(1, $numeroReserva);
-        $stmtReservaExiste->execute();
-        $reservaExiste = $stmtReservaExiste->fetchColumn();
+            $reserva->setFechaInicio($nuevaFechaInicio);
+            $reserva->setFechaFin($nuevaFechaFin);
 
-        if (!$reservaExiste) {
-            echo "No se encontró una reserva con el número especificado.\n";
+            echo "Reserva modificada exitosamente.\n";
             return;
         }
-    } else {
-        echo "Error al preparar la consulta de verificación de reserva.\n";
-        return;
     }
 
-    echo "Ingrese la nueva fecha de inicio de la reserva (formato YYYY-MM-DD): ";
-    $nuevaFechaInicio = trim(fgets(STDIN));
-    echo "Ingrese la nueva fecha de fin de la reserva (formato YYYY-MM-DD): ";
-    $nuevaFechaFin = trim(fgets(STDIN));
-
-    // Actualizar la reserva en la base de datos y obtener los detalles actualizados
-    $consultaActualizarReserva = "
-        UPDATE Reservas
-        SET fechaInicio = ?, fechaFin = ?
-        WHERE numero = ?
-        RETURNING numero, cliente_dni, cabana_numero, fechaInicio, fechaFin;
-    ";
-    $stmtActualizarReserva = $conexion->prepare($consultaActualizarReserva);
-
-    if ($stmtActualizarReserva) {
-        $stmtActualizarReserva->bindParam(1, $nuevaFechaInicio);
-        $stmtActualizarReserva->bindParam(2, $nuevaFechaFin);
-        $stmtActualizarReserva->bindParam(3, $numeroReserva);
-
-        if ($stmtActualizarReserva->execute()) {
-            $reserva = $stmtActualizarReserva->fetch(PDO::FETCH_ASSOC);
-
-            if ($reserva) {
-                echo "Reserva modificada exitosamente.\n";
-                echo "===========================\n";
-                // Mostrar los detalles de la reserva modificada
-                echo "Número de Reserva: " . $reserva['numero'] . "\n";
-                echo "Cliente DNI: " . $reserva['cliente_dni'] . "\n";
-                echo "Cabaña Número: " . $reserva['cabana_numero'] . "\n";
-                echo "Fecha de inicio: " . $reserva['fechainicio'] . "\n";
-                echo "Fecha de fin: " . $reserva['fechafin'] . "\n";
-                echo "===========================\n";
-            } else {
-                echo "No se encontró una reserva con el número especificado.\n";
-            }
-        } else {
-            echo "Error al modificar la reserva.\n";
-        }
-    } else {
-        echo "Error al preparar la consulta de actualización de reserva.\n";
-    }
+    echo "No se encontró una reserva con el número especificado.\n";
 }
 
-function eliminarReserva($conexion, $numeroReserva)
+function eliminarReserva()
 {
+    global $reservas;
+
     echo "\nEliminar Reserva\n";
+    echo "Ingrese el número de reserva a eliminar: ";
+    $numeroReserva = intval(trim(fgets(STDIN)));
 
-    // Verificar si la reserva existe en la base de datos
-    $consultaReservaExiste = "SELECT COUNT(*) FROM Reservas WHERE numero = ?";
-    $stmtReservaExiste = $conexion->prepare($consultaReservaExiste);
-
-    if ($stmtReservaExiste) {
-        $stmtReservaExiste->bindParam(1, $numeroReserva);
-        $stmtReservaExiste->execute();
-        $reservaExiste = $stmtReservaExiste->fetchColumn();
-
-        if (!$reservaExiste) {
-            echo "No se encontró una reserva con el número especificado.\n";
+    foreach ($reservas as $key => $reserva) {
+        if ($reserva->getNumero() === $numeroReserva) {
+            unset($reservas[$key]);
+            echo "Reserva eliminada exitosamente.\n";
             return;
         }
-    } else {
-        echo "Error al preparar la consulta de verificación de reserva.\n";
-        return;
     }
 
-    // Eliminar la reserva de la base de datos
-    $consultaEliminarReserva = "DELETE FROM Reservas WHERE numero = ?";
-    $stmtEliminarReserva = $conexion->prepare($consultaEliminarReserva);
-
-    if ($stmtEliminarReserva) {
-        $stmtEliminarReserva->bindParam(1, $numeroReserva);
-
-        if ($stmtEliminarReserva->execute()) {
-            echo "Reserva eliminada exitosamente.\n";
-        } else {
-            echo "Error al eliminar la reserva.\n";
-        }
-    } else {
-        echo "Error al preparar la consulta de eliminación de reserva.\n";
-    }
+    echo "No se encontró una reserva con el número especificado.\n";
 }
+// Función para cargar los datos de clientes desde un archivo JSON
+function cargarClientes()
+{
+    if (file_exists('clientes.json')) {
+        $jsonDatos = file_get_contents('clientes.json');
+        return json_decode($jsonDatos, true);
+    }
+    return [];
+}
+
+// Función para guardar los datos de clientes en un archivo JSON
+function guardarClientes($clientes)
+{
+    $jsonData = json_encode($clientes, JSON_PRETTY_PRINT);
+    file_put_contents('clientes.json', $jsonData);
+}
+
