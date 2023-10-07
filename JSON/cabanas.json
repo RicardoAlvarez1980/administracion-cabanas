@@ -1,0 +1,14 @@
+{
+    "1": {
+        "numero": 1,
+        "capacidad": "7",
+        "descripcion": "de Verano",
+        "costoDiario": "2000"
+    },
+    "2": {
+        "numero": 2,
+        "capacidad": "10",
+        "descripcion": "de Invierno",
+        "costoDiario": "3800"
+    }
+}

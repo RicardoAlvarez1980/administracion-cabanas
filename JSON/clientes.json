@@ -1,0 +1,16 @@
+{
+    "28200262": {
+        "dni": 28200262,
+        "nombre": "Ricardo",
+        "direccion": "Saavedra 750",
+        "telefono": "2234268273",
+        "email": "ricardo@mail.com"
+    },
+    "22222222": {
+        "dni": 22222222,
+        "nombre": "pedro",
+        "direccion": "moreno 334",
+        "telefono": "24255263",
+        "email": "pedro@mail.com"
+    }
+}
