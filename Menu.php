@@ -4,7 +4,6 @@ require_once 'reservas.php';
 require_once 'clientes.php';
 require_once 'data.php';
 
-
 // Arreglo para almacenar las cabañas, reservas y clientes
 $cabanas = [];
 $reservas = [];
@@ -12,7 +11,9 @@ $clientes = [];
 
 // Menú de ingreso al sistema
 while (true) {
+    echo "-------------------------------------------------------------------";
     echo "\nBienvenido a CabinManager, su gestor de reservas!\n";
+    echo "-------------------------------------------------------------------\n";
     echo "1. Gestión general del Sistema\n";
     echo "2. Búsqueda de Clientes\n";
     echo "3. Listados de Clientes, Cabañas y Reservas\n";
@@ -43,8 +44,9 @@ while (true) {
 function GestorGeneral()
 {
     while (true) {
-
+        echo "---------------------------";
         echo "\nGestión General del Sistema\n";
+        echo "---------------------------\n";
         echo "1. Gestionar Clientes\n";
         echo "2. Gestionar Cabañas\n";
         echo "3. Gestionar Reservas\n";
@@ -75,11 +77,12 @@ function GestorGeneral()
     }
 }
 
-//Revisar la ubicación de esta función
 function menuListados()
 {
     while (true) {
+        echo "---------------------------";
         echo "\nListados:\n";
+        echo "---------------------------\n";
         echo "1. Listar Clientes\n";
         echo "2. Listar Cabañas\n";
         echo "3. Listar Reservas\n";
@@ -110,145 +113,13 @@ function menuListados()
     }
 }
 
-
-
-// Funciones para gestionar las cabañas
-function gestionarCabanas()
-{
-    global $cabanas;
-
-    while (true) {
-        echo "\nBienvenido al menú de gestión de Cabañas:\n";
-        echo "1. Agregar Cabaña\n";
-        echo "2. Actualizar Cabaña\n";
-        echo "3. Eliminar Cabaña\n";
-        echo "0. Volver al Menú Principal\n";
-        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
-
-        switch ($opcion) {
-            case 1:
-                echo "---------------------------\n";
-                agregarCabana();
-                break;
-            case 2:
-                actualizarCabana();
-                break;
-            case 3:
-                eliminarCabana();
-                break;
-            case 0:
-                echo "Volviendo al Menú Principal...\n";
-                return;
-            default:
-                echo "Opción inválida. Intente nuevamente.\n";
-                break;
-        }
-    }
-}
-
-function listarCabanas()
-{
-    global $cabanas;
-
-    if (empty($cabanas)) {
-        echo "No hay cabañas registradas.\n";
-    } else {
-        echo "Listado de Cabañas:\n";
-        echo "---------------------------\n";
-        foreach ($cabanas as $cabana) {
-            echo "Número: " . $cabana->getNumero() . "\n";
-            echo "Capacidad: " . $cabana->getCapacidad() . "\n";
-            echo "Descripción: " . $cabana->getDescripcion() . "\n";
-            echo "Costo Diario: " . $cabana->getCostoDiario() . "\n";
-            echo "---------------------------\n";
-        }
-    }
-}
-
-function agregarCabana()
-{
-    global $cabanas;
-
-    echo "\nAgregar Cabaña\n";
-    echo "Ingrese el número de la cabaña: ";
-    $numero = intval(trim(fgets(STDIN)));
-
-    // Verificar si el número de cabaña ya existe
-    foreach ($cabanas as $cabana) {
-        if ($cabana->getNumero() === $numero) {
-            echo "Ya existe una cabaña con ese número. Intente nuevamente.\n";
-            return;
-        }
-    }
-
-    echo "Ingrese la capacidad de la cabaña: ";
-    $capacidad = intval(trim(fgets(STDIN)));
-    echo "Ingrese la descripción de la cabaña: ";
-    $descripcion = trim(fgets(STDIN));
-    echo "Ingrese el costo diario de la cabaña: ";
-    $costoDiario = floatval(trim(fgets(STDIN)));
-
-    $cabana = new Cabanas($numero, $capacidad, $descripcion, $costoDiario);
-    $cabanas[] = $cabana;
-
-    echo "La cabaña nº " . $cabana->getNumero() . " fue agregada exitosamente.\n";
-}
-
-function actualizarCabana()
-{
-    global $cabanas;
-
-    echo "\nActualizar Cabaña\n";
-    echo "Ingrese el número de la cabaña a actualizar: ";
-    $numero = intval(trim(fgets(STDIN)));
-
-    foreach ($cabanas as $cabana) {
-        if ($cabana->getNumero() === $numero) {
-            echo "Ingrese la nueva capacidad de la cabaña: ";
-            $capacidad = intval(trim(fgets(STDIN)));
-            echo "Ingrese la nueva descripción de la cabaña: ";
-            $descripcion = trim(fgets(STDIN));
-            echo "Ingrese el nuevo costo diario de la cabaña: ";
-            $costoDiario = floatval(trim(fgets(STDIN)));
-
-            $cabana->setCapacidad($capacidad);
-            $cabana->setDescripcion($descripcion);
-            $cabana->setCostoDiario($costoDiario);
-
-            echo "Cabaña actualizada exitosamente.\n";
-            return;
-        }
-    }
-
-    echo "No se encontró una cabaña con el número especificado.\n";
-}
-
-function eliminarCabana()
-{
-    global $cabanas;
-
-    echo "\nEliminar Cabaña\n";
-    echo "Ingrese el número de la cabaña a eliminar: ";
-    $numero = intval(trim(fgets(STDIN)));
-
-    foreach ($cabanas as $key => $cabana) {
-        if ($cabana->getNumero() === $numero) {
-            unset($cabanas[$key]);
-            echo "Cabaña eliminada exitosamente.\n";
-            return;
-        }
-    }
-
-    echo "No se encontró una cabaña con el número especificado.\n";
-}
-
 // Funciones para gestionar los clientes
 function gestionarClientes()
 {
-    global $clientes;
-
     while (true) {
+        echo "---------------------------";
         echo "\nMenú de Clientes\n";
+        echo "---------------------------\n";
         echo "1. Agregar Cliente\n";
         echo "2. Actualizar Cliente\n";
         echo "3. Eliminar Cliente\n";
@@ -257,23 +128,17 @@ function gestionarClientes()
 
         switch ($opcion) {
             case 1:
-                echo "---------------------------\n";
                 crearCliente();
                 break;
-
             case 2:
                 actualizarCliente();
                 break;
-
             case 3:
                 eliminarCliente();
                 break;
-
-
             case 0:
                 echo "Volviendo al Menú Principal...\n";
                 return;
-
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
@@ -281,12 +146,13 @@ function gestionarClientes()
     }
 }
 
-function listarClientes() {
+function listarClientes()
+{
     // Cargar la lista actual de clientes
     $clientes = cargarClientes();
-
+    echo "---------------------------";
     echo "\nLista de Clientes:\n";
-
+    echo "---------------------------\n";
     // Verificar si hay clientes para listar
     if (!empty($clientes)) {
         foreach ($clientes as $cliente) {
@@ -295,7 +161,7 @@ function listarClientes() {
             echo "Dirección: " . $cliente['direccion'] . "\n";
             echo "Teléfono: " . $cliente['telefono'] . "\n";
             echo "Email: " . $cliente['email'] . "\n";
-            echo str_repeat('-', 30) . "\n"; // Línea de separación
+            echo str_repeat('=', 30) . "\n"; // Línea de separación
         }
     } else {
         echo "No hay clientes registrados.\n";
@@ -306,8 +172,9 @@ function crearCliente()
 {
     // Cargar la lista actual de clientes
     $clientes = cargarClientes();
-
+    echo "---------------------------";
     echo "\nAgregar Cliente\n";
+    echo "---------------------------\n";
     echo "Ingrese el DNI del cliente: ";
     $dni = intval(trim(fgets(STDIN)));
 
@@ -346,11 +213,13 @@ function crearCliente()
 
 
 // Función para eliminar un cliente por su ID
-function eliminarCliente() {
+function eliminarCliente()
+{
     // Cargar la lista actual de clientes
     $clientes = cargarClientes();
-
+    echo "---------------------------";
     echo "\nEliminar Cliente\n";
+    echo "---------------------------\n";
     echo "Ingrese el DNI del cliente a eliminar: ";
     $dni = intval(trim(fgets(STDIN)));
 
@@ -384,7 +253,8 @@ function eliminarCliente() {
 }
 
 // Función para actualizar los datos de un cliente por su ID
-function actualizarCliente() {
+function actualizarCliente()
+{
     // Cargar la lista actual de clientes
     $clientes = cargarClientes();
 
@@ -419,7 +289,8 @@ function actualizarCliente() {
 }
 
 
-function buscarClientes() {
+function buscarClientes()
+{
     // Cargar la lista actual de clientes
     $clientes = cargarClientes();
 
@@ -458,6 +329,172 @@ function buscarClientes() {
     }
 }
 
+// Funciones para gestionar las cabañas
+function gestionarCabanas()
+{
+    while (true) {
+        echo "----------------------------------------------";
+        echo "\nBienvenido al menú de gestión de Cabañas:\n";
+        echo "----------------------------------------------\n";
+        echo "1. Agregar Cabaña\n";
+        echo "2. Actualizar Cabaña\n";
+        echo "3. Eliminar Cabaña\n";
+        echo "0. Volver al Menú Principal\n";
+        $opcion = readline("Ingrese el número correspondiente a la opción deseada: ");
+
+        switch ($opcion) {
+            case 1:
+                crearCabana();
+                break;
+            case 2:
+                actualizarCabana();
+                break;
+            case 3:
+                eliminarCabana();
+                break;
+            case 0:
+                echo "Volviendo al Menú Principal...\n";
+                return;
+            default:
+                echo "Opción inválida. Intente nuevamente.\n";
+                break;
+        }
+    }
+}
+
+function listarCabanas()
+{
+    // Cargar la lista actual de cabañas
+    $cabanas = cargarCabanas();
+    echo "---------------------------";
+    echo "\nLista de Cabañas:\n";
+    echo "---------------------------\n";
+    // Verificar si hay cabañas para listar
+    if (!empty($cabanas)) {
+        foreach ($cabanas as $cabana) {
+            echo "Número: " . $cabana['numero'] . "\n";
+            echo "Capacidad: " . $cabana['capacidad'] . "\n";
+            echo "descripción: " . $cabana['descripcion'] . "\n";
+            echo "Costo Diario: " . $cabana['costoDiario'] . "\n";
+            echo str_repeat('=', 30) . "\n"; // Línea de separación
+        }
+    } else {
+        echo "No hay cabañas registradas.\n";
+    }
+}
+
+function crearCabana()
+{
+    // Cargar la lista actual de cabañas.
+    $cabanas = cargarCabanas();
+
+    echo "\nAgregar Cabaña\n";
+    echo "Ingrese el número de la cabaña: ";
+    $numero = intval(trim(fgets(STDIN)));
+
+    // Verificar si ya existe una cabaña con el mismo número.
+    if (isset($cabanas[$numero])) {
+        echo "Ya existe una cabaña con ese Número. Intente nuevamente.\n";
+        return;
+    }
+
+    echo "Ingrese la capacidad de la cabaña: ";
+    $capacidad = trim(fgets(STDIN));
+    echo "Ingrese la descripcion de la cabaña: ";
+    $descripcion = trim(fgets(STDIN));
+    echo "Ingrese el costo diario de la cabaña: ";
+    $costoDiario = trim(fgets(STDIN));
+
+    // Crear un nuevo cliente como un array asociativo
+    $nuevaCabana = [
+        'numero' => $numero,
+        'capacidad' => $capacidad,
+        'descripcion' => $descripcion,
+        'costoDiario' => $costoDiario,
+    ];
+
+    // Asignar la nueva cabaña al array de cabañas utilizando el número como clave
+    $cabanas[$numero] = $nuevaCabana;
+
+    // Guardar la lista actualizada de cabañas en el archivo JSON
+    guardarCabanas($cabanas);
+    echo "Cabaña agregada exitosamente.\n";
+}
+
+
+function actualizarCabana()
+{
+    // Cargar la lista actual de cabañas
+    $cabanas = cargarCabanas();
+    echo "---------------------------\n";
+    echo "\nActualizar Cabaña\n";
+    echo "---------------------------\n";
+    echo "Ingrese el número de la cabaña a actualizar: ";
+    $numero = intval(trim(fgets(STDIN)));
+
+    // Verificar si el cliente existe en la lista de clientes
+    if (isset($cabanas[$numero])) {
+        echo "Cabaña encontrada. Ingrese los nuevos datos:\n";
+
+        // Solicitar al usuario los nuevos datos (capacidad, dirección, teléfono y email)
+        echo "Ingrese la nueva capacidad de la cabaña: ";
+        $cabanas[$numero]['capacidad'] = trim(fgets(STDIN));
+
+        echo "Ingrese la nueva descripcion de la cabaña: ";
+        $cabanas[$numero]['descripcion'] = trim(fgets(STDIN));
+
+        echo "Ingrese el nuevo costo diario de la cabaña: ";
+        $cabanas[$numero]['costoDiario'] = trim(fgets(STDIN));
+
+        // Guardar la lista actualizada de cabañas en el archivo JSON
+        guardarCabanas($cabanas);
+
+        echo "Cabaña actualizada exitosamente.\n";
+    } else {
+        echo "No se encontró una cabaña con el número especificado.\n";
+    }
+}
+
+function eliminarCabana()
+{
+    // Cargar la lista actual de cabañas
+    $cabanas = cargarCabanas();
+    echo "--------------------------\n";
+    echo "\nEliminar Cabaña\n";
+    echo "--------------------------\n";
+    echo "Ingrese el número de la cabaña a eliminar: ";
+    $numero = intval(trim(fgets(STDIN)));
+
+    // Verificar si la cabaña existe en la lista de cabañas
+    if (isset($cabanas[$numero])) {
+        echo "Cabaña encontrada:\n";
+        echo "Número: " . $cabanas[$numero]['numero'] . "\n";
+        echo "Capacidad: " . $cabanas[$numero]['capacidad'] . "\n";
+        echo "Descripción: " . $cabanas[$numero]['descripcion'] . "\n";
+        echo "Costo Diario: " . $cabanas[$numero]['costoDiario'] . "\n";
+
+
+        // Pedir confirmación para eliminar la cabaña
+        echo "¿Desea eliminar esta cabaña? (S/N): ";
+        $confirmacion = trim(fgets(STDIN));
+
+        if (strtoupper($confirmacion) === 'S') {
+            // Eliminar la cabaña del array de cabañas utilizando el número como clave
+            unset($cabanas[$numero]);
+
+            // Guardar la lista actualizada de cabañas en el archivo JSON
+            guardarCabanas($cabanas);
+
+            echo "Cabaña eliminada exitosamente.\n";
+        } else {
+            echo "Operación de eliminación cancelada.\n";
+        }
+    } else {
+        echo "No se encontró una cabaña con el número especificado.\n";
+    }
+}
+
+
 
 
 // Funciones para gestionar las reservas
@@ -479,20 +516,15 @@ function gestionarReservas()
                 echo "---------------------------\n";
                 agregarReserva();
                 break;
-
             case 2:
                 modificarReserva();
                 break;
-
             case 3:
                 eliminarReserva();
                 break;
-
-
             case 0:
                 echo "Volviendo al Menú Principal...\n";
                 return;
-
             default:
                 echo "Opción inválida. Intente nuevamente.\n";
                 break;
@@ -673,3 +705,19 @@ function guardarClientes($clientes)
     file_put_contents('./JSON/clientes.json', $jsonData);
 }
 
+// Función para cargar los datos de cabañas desde un archivo JSON
+function cargarCabanas()
+{
+    if (file_exists('./JSON/cabanas.json')) {
+        $jsonDatos = file_get_contents('./JSON/cabanas.json');
+        return json_decode($jsonDatos, true);
+    }
+    return [];
+}
+
+// Función para guardar los datos de clientes en un archivo JSON
+function guardarCabanas($cabanas)
+{
+    $jsonData = json_encode($cabanas, JSON_PRETTY_PRINT);
+    file_put_contents('./JSON/cabanas.json', $jsonData);
+}
