@@ -324,7 +324,7 @@ function crearCliente()
 
     // Verificar si ya existe un cliente con el mismo ID
     if (isset($clientes[$dni])) {
-        echo "Ya existe un cliente con ese ID. Intente nuevamente.\n";
+        echo "Ya existe un cliente con ese DNI. Intente nuevamente.\n";
         return;
     }
 
@@ -368,7 +368,7 @@ function eliminarCliente() {
     // Verificar si el cliente existe en la lista de clientes
     if (isset($clientes[$dni])) {
         echo "Cliente encontrado:\n";
-        echo "DNI: " . $clientes[$dni]['id'] . "\n";
+        echo "DNI: " . $clientes[$dni]['dni'] . "\n";
         echo "Nombre: " . $clientes[$dni]['nombre'] . "\n";
         echo "Dirección: " . $clientes[$dni]['direccion'] . "\n";
         echo "Teléfono: " . $clientes[$dni]['telefono'] . "\n";
@@ -390,7 +390,7 @@ function eliminarCliente() {
             echo "Operación de eliminación cancelada.\n";
         }
     } else {
-        echo "No se encontró un cliente con el ID especificado.\n";
+        echo "No se encontró un cliente con el DNI especificado.\n";
     }
 }
 
@@ -400,7 +400,7 @@ function actualizarCliente() {
     $clientes = cargarClientes();
 
     echo "\nActualizar Cliente\n";
-    echo "Ingrese el ID del cliente a actualizar: ";
+    echo "Ingrese el DNI del cliente a actualizar: ";
     $dni = intval(trim(fgets(STDIN)));
 
     // Verificar si el cliente existe en la lista de clientes
@@ -425,7 +425,7 @@ function actualizarCliente() {
 
         echo "Cliente actualizado exitosamente.\n";
     } else {
-        echo "No se encontró un cliente con el ID especificado.\n";
+        echo "No se encontró un cliente con el DNI especificado.\n";
     }
 }
 
@@ -581,7 +581,7 @@ function agregarReserva()
     // Mostrar lista de clientes
     echo "Lista de Clientes:\n";
     foreach ($clientes as $cliente) {
-        echo "DNI: " . $cliente->getId() . "\n";
+        echo "DNI: " . $cliente->getDni() . "\n";
         echo "Nombre: " . $cliente->getNombre() . "\n";
         echo "Dirección: " . $cliente->getDireccion() . "\n";
         echo "Teléfono: " . $cliente->getTelefono() . "\n";
@@ -591,19 +591,19 @@ function agregarReserva()
 
     // Selección de cliente
     echo "Ingrese el DNI (Solo ingrese números) del cliente que realiza la reserva: ";
-    $idCliente = intval(trim(fgets(STDIN)));
+    $dniCliente = intval(trim(fgets(STDIN)));
 
     // Verificar si el cliente existe
     $clienteSeleccionado = null;
     foreach ($clientes as $cliente) {
-        if ($cliente->getId() === $idCliente) {
+        if ($cliente->getDni() === $dniCliente) {
             $clienteSeleccionado = $cliente;
             break;
         }
     }
 
     if (!$clienteSeleccionado) {
-        echo "No se encontró un cliente con el ID especificado.\n";
+        echo "No se encontró un cliente con el DNI especificado.\n";
         return;
     }
 
@@ -683,4 +683,4 @@ function guardarClientes($clientes)
     $jsonData = json_encode($clientes, JSON_PRETTY_PRINT);
     file_put_contents('clientes.json', $jsonData);
 }
-//MODIFICAR CODIGO DE RESERVA (ID DE RESERVA)
+
